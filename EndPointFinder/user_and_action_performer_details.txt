@@ -1,0 +1,259 @@
+User - 
+ First Name: შორენა,
+ Last Name: საღინაძე,
+ Email: tamarra.barbakadze@gmail.com,
+ Mobile Number: 597975284, 
+ Location: გლდანულას ხიდი, T'bilisi, Georgia 
+	
+User - 
+ First Name: შორენა,
+ Last Name: საღინაძე,
+ Email: tamarra.barbakadze@gmail.com,
+ Mobile Number: 597975284, 
+ Location: გლდანულას ხიდი, T'bilisi, Georgia 
+	
+User - 
+ First Name: ,
+ Last Name: ,
+ Email: ,
+ Mobile Number: 593422433, 
+ Location: 8 ნიკო მუსხელიშვილის ქუჩა 
+	
+Action Performer - 
+ First Name: Giorgi,
+ Last Name: Tskhadadze 
+	
+User - 
+ First Name: ,
+ Last Name: ,
+ Email: ,
+ Mobile Number: 555933893, 
+ Location: 27 წერეთლის გამზირი, თბილისი 0119, საქართველო 
+	
+Action Performer - 
+ First Name: ოპერატორი,
+ Last Name: ჭოველიძე 
+	
+User - 
+ First Name: ,
+ Last Name: ,
+ Email: ,
+ Mobile Number: 577790075, 
+ Location: 8 Dzmebi Kakabadzeebi St, T'bilisi, Georgia 
+	
+Action Performer - 
+ First Name: Ani,
+ Last Name: Krasni 
+	
+User - 
+ First Name: Amy,
+ Last Name: Morgan,
+ Email: Amy.morgan@mail.ru,
+ Mobile Number: 551042046, 
+ Location: 56 Telenji Street 
+	
+Action Performer - 
+ First Name: ლევანი,
+ Last Name: ჯაჭვაძე 
+	
+User - 
+ First Name: რიტა,
+ Last Name: ჯაიანი,
+ Email: ritajaiani@gmail.com,
+ Mobile Number: 598772444, 
+ Location: 24, თბილისი, საქართველო 
+	
+Action Performer - 
+ First Name: Ani,
+ Last Name: Krasni 
+	
+User - 
+ First Name: ანჟელიკა,
+ Last Name: აბესაძე,
+ Email: anzhelikaabesadze@gmail.com,
+ Mobile Number: 593931932, 
+ Location: 17 Niabi I Turn, T'bilisi, Georgia 
+	
+Action Performer - 
+ First Name: მთვარისა,
+ Last Name: კაპანაძე 
+	
+User - 
+ First Name: ანჟელიკა,
+ Last Name: აბესაძე,
+ Email: anzhelikaabesadze@gmail.com,
+ Mobile Number: 593931932, 
+ Location: 17 Niabi I Turn, T'bilisi, Georgia 
+	
+Action Performer - 
+ First Name: Giorgi,
+ Last Name: Tskhadadze 
+	
+User - 
+ First Name: ,
+ Last Name: ,
+ Email: ,
+ Mobile Number: 598086527, 
+ Location: 11a ელეფთერ ანდრონიკაშვილის I შესახვევი, თბილისი, საქართველო 
+	
+Action Performer - 
+ First Name: პაატა,
+ Last Name: გაბიტაშვილი 
+	
+User - 
+ First Name: დოდო,
+ Last Name: ალხაზაშვილი,
+ Email: dalkhazashvili@gpih.ge,
+ Mobile Number: 595569621, 
+ Location: 53/94 Sanavardo St, T'bilisi, Georgia Gldani-Nadzaladevi 
+	
+Action Performer - 
+ First Name: ლევანი,
+ Last Name: ჯაჭვაძე 
+	
+User - 
+ First Name: ,
+ Last Name: ,
+ Email: ,
+ Mobile Number: 577003319, 
+ Location: 12, T'bilisi, Georgia 
+	
+Action Performer - 
+ First Name: ლევანი,
+ Last Name: ჯაჭვაძე 
+	
+User - 
+ First Name: ელენე,
+ Last Name: თაქთაქიშვილი,
+ Email: lankalanka1016@gmal.com,
+ Mobile Number: 571151414, 
+ Location: 21, თბილისი, საქართველო 
+	
+Action Performer - 
+ First Name: ვალერი ,
+ Last Name: კუპატაძე 
+	
+User - 
+ First Name: ეკა,
+ Last Name: მახარაძე,
+ Email: eka.makharadze@gmail.com,
+ Mobile Number: 551002102, 
+ Location: 104 Omar Khizanishvili St, T'bilisi, Georgia 
+	
+Action Performer - 
+ First Name: გიორგი,
+ Last Name: მაისურაძე 
+	
+User - 
+ First Name: ,
+ Last Name: ,
+ Email: ,
+ Mobile Number: 514669669, 
+ Location: 13, T'bilisi, Georgia 
+	
+Action Performer - 
+ First Name: დავით,
+ Last Name: ქასოშვილი 
+	
+User - 
+ First Name: Rohith,
+ Last Name: Ramdeepak,
+ Email: rohithramdeepak@gmail.com,
+ Mobile Number: 592300714, 
+ Location: 30 Shalva Nutsubidze St, T'bilisi, Georgia 
+	
+Action Performer - 
+ First Name: მამუკა,
+ Last Name: ბეკურიშვილი 
+	
+User - 
+ First Name: ნინო,
+ Last Name: ,
+ Email: ,
+ Mobile Number: 555999599, 
+ Location: 6 Saint Petersburg Street, T'bilisi, Грузия 
+	
+Action Performer - 
+ First Name: გიორგი,
+ Last Name: ტეფნაძე 
+	
+User - 
+ First Name: ანუკა,
+ Last Name: ჯღარკავა,
+ Email: anuka@neal.ge,
+ Mobile Number: 591232525, 
+ Location: 24 წყალტუბოს ქუჩა 
+	
+User - 
+ First Name: ანუკა,
+ Last Name: ჯღარკავა,
+ Email: anuka@neal.ge,
+ Mobile Number: 591232525, 
+ Location: 24 წყალტუბოს ქუჩა 
+	
+Action Performer - 
+ First Name: ეითბარ,
+ Last Name: ალიევი 
+	
+User - 
+ First Name: დიმიტრი,
+ Last Name: მანჯავიძე,
+ Email: manjavidzedimitri@gmail.com,
+ Mobile Number: 599897994, 
+ Location: 8, T'bilisi, Georgia 
+	
+Action Performer - 
+ First Name: მამუკა,
+ Last Name: ბეკურიშვილი 
+	
+User - 
+ First Name: ხატია,
+ Last Name: მჭედლიძე,
+ Email: xatia-mchedlidze@mail.ru,
+ Mobile Number: 599982628, 
+ Location: 31 Kumisi St, T'bilisi, Georgia 
+	
+Action Performer - 
+ First Name: ალიკ,
+ Last Name: გაბელია 
+	
+User - 
+ First Name: გიორგი,
+ Last Name: გორგოზიანი,
+ Email: vibercriminal77@gmail.com,
+ Mobile Number: 591263939, 
+ Location: 38, T'bilisi, Georgia 
+	
+Action Performer - 
+ First Name: ხვიჩა,
+ Last Name: კვარაცხელია 
+	
+User - 
+ First Name: Josh,
+ Last Name: Pearce,
+ Email: 28.19mission@gmail.com,
+ Mobile Number: 551122315, 
+ Location: 4 Marijani St, T'bilisi, Georgia 
+	
+Action Performer - 
+ First Name: ბექა,
+ Last Name: ლუკავა 
+	
+User - 
+ First Name: Teona,
+ Last Name: Chachava,
+ Email: teochachava@gmail.com,
+ Mobile Number: 555123000, 
+ Location: 12 Tsavkisi St, T'bilisi, Georgia 
+	
+Action Performer - 
+ First Name: ბექა,
+ Last Name: ლუკავა 
+	
+User - 
+ First Name: ,
+ Last Name: ,
+ Email: ,
+ Mobile Number: 555557725, 
+ Location: Jerusalem Square, MRR4+4C2, თბილისი, Georgia 
+	
