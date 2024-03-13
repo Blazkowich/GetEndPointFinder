@@ -20,7 +20,7 @@ namespace EndPointFinder
         {
             var url = @"https://catalog-api.orinabiji.ge/catalog/";
             var urlForDownload = @"https://catalog-api.orinabiji.ge/catalog/api/orders";
-            var textPath = @"C:\Users\oilur\source\repos\EndPointFinder\EndPointFinder\output.txt";
+            var textPath = @"C:\Users\oilur\source\repos\EndPointFinder\EndPointFinder\Dataset.txt";
             var endpoints = new List<string>();
 
             using (StreamReader reader = new StreamReader(textPath))
@@ -101,13 +101,12 @@ namespace EndPointFinder
 
                     Root root = JsonConvert.DeserializeObject<Root>(jsonString);
 
-                    var filePath = Path.Combine(@"C:\Users\oilur\source\repos\EndPointFinder\EndPointFinder\", "order_endpoint.txt");
+                    var filePath = Path.Combine(@"C:\Users\oilur\source\repos\EndPointFinder\EndPointFinder\Data", $"order_endpoint_{DateTime.Now:yyyy-MM-dd-HH-mm-ss}.txt");
 
                     foreach (var order in root.Data.Orders)
                     {
                         string serializedOrder = JsonConvert.SerializeObject(order, Formatting.Indented);
 
-                        // Append to the file
                         await File.AppendAllTextAsync(filePath, serializedOrder + Environment.NewLine);
                     }
 
@@ -139,7 +138,7 @@ namespace EndPointFinder
 
                     Root root = JsonConvert.DeserializeObject<Root>(jsonString);
 
-                    var filePath = Path.Combine(@"C:\Users\oilur\source\repos\EndPointFinder\EndPointFinder\", "user_and_action_performer_details.txt");
+                    var filePath = Path.Combine(@"C:\Users\oilur\source\repos\EndPointFinder\EndPointFinder\Data", $"user_and_action_performer_details_{DateTime.Now:yyyy-MM-dd-HH-mm-ss}.txt");
 
                     foreach (var order in root.Data.Orders)
                     {
@@ -154,7 +153,6 @@ namespace EndPointFinder
                             await File.AppendAllTextAsync(filePath, actionPerformerDetail + Environment.NewLine);
                         }
 
-                        // Write user details to the file
                         await File.AppendAllTextAsync(filePath, userDetail + Environment.NewLine);
                     }
 
