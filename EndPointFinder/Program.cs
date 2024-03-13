@@ -18,9 +18,9 @@ namespace EndPointFinder
     {
         static async Task Main(string[] args)
         {
-            var url = @"https://catalog-api.orinabiji.ge/catalog/";
+            var url = @"https://spargeorgia.com/";
             var urlForDownload = @"https://catalog-api.orinabiji.ge/catalog/api/orders";
-            var textPath = @"C:\Users\oilur\source\repos\EndPointFinder\EndPointFinder\Dataset.txt";
+            var textPath = @"C:\Users\oilur\source\repos\EndPointFinder\EndPointFinder\InputDataset\Dataset.txt";
             var endpoints = new List<string>();
 
             using (StreamReader reader = new StreamReader(textPath))
@@ -40,10 +40,13 @@ namespace EndPointFinder
                 }
             }
 
-            //Console.WriteLine(await GetEndpointsWithApiAndS(url, endpoints));
+            Console.WriteLine(await GetEndpointsWithApiAndS(url, endpoints));
+            Console.WriteLine(await GetEndpointsWithApi(url, endpoints));
+            Console.WriteLine(await GetEndpointsWithoutApi(url, endpoints));
+            Console.WriteLine(await GetEndpointsWithS(url, endpoints));
 
-            await DownloadEndpointResults(urlForDownload);
-            await WriteUserAndActionPerformerDetails(urlForDownload);
+            //await DownloadEndpointResults(urlForDownload);
+            //await WriteUserAndActionPerformerDetails(urlForDownload);
 
         }
         public static async Task<string> GetEndpointsWithApiAndS(string url, List<string> endpoints)
@@ -87,6 +90,126 @@ namespace EndPointFinder
                 return $"An error occurred: {ex.Message}";
             }
         }
+
+        public static async Task<string> GetEndpointsWithApi(string url, List<string> endpoints)
+        {
+            try
+            {
+                var successfulEndpoints = new StringBuilder();
+
+                using var httpClient = new HttpClient();
+
+                var batches = endpoints.Select((endpoint, index) => new { endpoint, index })
+                    .GroupBy(x => x.index / 5)
+                    .Select(group => group.Select(x => x.endpoint).ToList())
+                    .ToList();
+
+                foreach (var batch in batches)
+                {
+                    var tasks = batch.Select(async endpoint =>
+                    {
+                        var response = await httpClient.GetAsync(url + "api/" + endpoint);
+                        if (response.StatusCode == HttpStatusCode.OK)
+                        {
+                            successfulEndpoints.AppendLine(url + "api/" + endpoint);
+                        }
+                    }).ToArray();
+
+                    await Task.WhenAll(tasks);
+                }
+
+                var result = new StringBuilder();
+                result.AppendLine("Successful Endpoints:");
+                result.AppendLine(successfulEndpoints.ToString());
+
+                return result.ToString();
+            }
+            catch (Exception ex)
+            {
+                return $"An error occurred: {ex.Message}";
+            }
+        }
+
+        public static async Task<string> GetEndpointsWithoutApi(string url, List<string> endpoints)
+        {
+            try
+            {
+                var successfulEndpoints = new StringBuilder();
+
+                using var httpClient = new HttpClient();
+
+                var batches = endpoints.Select((endpoint, index) => new { endpoint, index })
+                       .GroupBy(x => x.index / 5)
+                       .Select(group => group.Select(x => x.endpoint).ToList())
+                       .ToList();
+
+                foreach (var batch in batches)
+                {
+                    var tasks = batch.Select(async endpoint =>
+                    {
+                        var response = await httpClient.GetAsync(url + endpoint);
+                        if (response.StatusCode == HttpStatusCode.OK)
+                        {
+                            successfulEndpoints.AppendLine(url + endpoint);
+                        }
+                    }).ToArray();
+
+                    await Task.WhenAll(tasks);
+                }
+
+                var result = new StringBuilder();
+                result.AppendLine("Successful Endpoints Without Api:");
+                result.AppendLine(successfulEndpoints.ToString());
+
+                return result.ToString();
+            }
+            catch (Exception ex)
+            {
+                return $"An error occurred: {ex.Message}";
+            }
+        }
+
+        public static async Task<string> GetEndpointsWithS(string url, List<string> endpoints)
+        {
+            try
+            {
+                var successfulEndpoints = new StringBuilder();
+
+                using var httpClient = new HttpClient();
+                var batches = endpoints.Select((endpoint, index) => new { endpoint, index })
+                    .GroupBy(x => x.index / 5)
+                    .Select(group => group.Select(x => x.endpoint).ToList())
+                    .ToList();
+
+                foreach (var batch in batches)
+                {
+                    var tasks = batch.Select(async endpoint =>
+                    {
+                        var response = await httpClient.GetAsync(url + "api/" + endpoint + "s");
+                        if (response.StatusCode == HttpStatusCode.OK)
+                        {
+                            successfulEndpoints.AppendLine(url + "api/" + endpoint + "s");
+                        }
+                    }).ToArray();
+
+                    await Task.WhenAll(tasks);
+                }
+
+                var result = new StringBuilder();
+                result.AppendLine("Successful Endpoints:");
+                result.AppendLine(successfulEndpoints.ToString());
+
+                return result.ToString();
+            }
+            catch (Exception ex)
+            {
+                return $"An error occurred: {ex.Message}";
+            }
+        }
+
+
+
+
 
         public static async Task DownloadEndpointResults(string url)
         {
@@ -166,127 +289,6 @@ namespace EndPointFinder
             catch (Exception ex)
             {
                 Console.WriteLine($"An error occurred: {ex.Message}");
-            }
-        }
-
-
-
-
-
-
-        public static async Task<string> GetEndpointsWithApi(string url, List<string> endpoints)
-        {
-            try
-            {
-                var successfulEndpoints = new StringBuilder();
-
-                using var httpClient = new HttpClient();
-
-                var batches = endpoints.Select((endpoint, index) => new { endpoint, index })
-                    .GroupBy(x => x.index / 10)
-                    .Select(group => group.Select(x => x.endpoint).ToList())
-                    .ToList();
-
-                foreach (var batch in batches)
-                {
-                    var tasks = batch.Select(async endpoint =>
-                    {
-                        var response = await httpClient.GetAsync(url + "api/" + endpoint);
-                        if (response.StatusCode == HttpStatusCode.OK)
-                        {
-                            successfulEndpoints.AppendLine(url + "api/" + endpoint);
-                        }
-                    }).ToArray();
-
-                    await Task.WhenAll(tasks);
-                }
-
-                var result = new StringBuilder();
-                result.AppendLine("Successful Endpoints:");
-                result.AppendLine(successfulEndpoints.ToString());
-
-                return result.ToString();
-            }
-            catch (Exception ex)
-            {
-                return $"An error occurred: {ex.Message}";
-            }
-        }
-
-        public static async Task<string> GetEndpointsWithoutApi(string url, List<string> endpoints)
-        {
-            try
-            {
-                var successfulEndpoints = new StringBuilder();
-
-                using var httpClient = new HttpClient();
-
-                var batches = endpoints.Select((endpoint, index) => new { endpoint, index })
-                       .GroupBy(x => x.index / 10)
-                       .Select(group => group.Select(x => x.endpoint).ToList())
-                       .ToList();
-
-                foreach (var batch in batches)
-                {
-                    var tasks = batch.Select(async endpoint =>
-                    {
-                        var response = await httpClient.GetAsync(url + endpoint);
-                        if (response.StatusCode == HttpStatusCode.OK)
-                        {
-                            successfulEndpoints.AppendLine(url + endpoint);
-                        }
-                    }).ToArray();
-
-                    await Task.WhenAll(tasks);
-                }
-
-                var result = new StringBuilder();
-                result.AppendLine("Successful Endpoints Without Api:");
-                result.AppendLine(successfulEndpoints.ToString());
-
-                return result.ToString();
-            }
-            catch (Exception ex)
-            {
-                return $"An error occurred: {ex.Message}";
-            }
-        }
-
-        public static async Task<string> GetEndpointsWithS(string url, List<string> endpoints)
-        {
-            try
-            {
-                var successfulEndpoints = new StringBuilder();
-
-                using var httpClient = new HttpClient();
-                var batches = endpoints.Select((endpoint, index) => new { endpoint, index })
-                    .GroupBy(x => x.index / 10)
-                    .Select(group => group.Select(x => x.endpoint).ToList())
-                    .ToList();
-
-                foreach (var batch in batches)
-                {
-                    var tasks = batch.Select(async endpoint =>
-                    {
-                        var response = await httpClient.GetAsync(url + "api/" + endpoint + "s");
-                        if (response.StatusCode == HttpStatusCode.OK)
-                        {
-                            successfulEndpoints.AppendLine(url + "api/" + endpoint + "s");
-                        }
-                    }).ToArray();
-
-                    await Task.WhenAll(tasks);
-                }
-
-                var result = new StringBuilder();
-                result.AppendLine("Successful Endpoints:");
-                result.AppendLine(successfulEndpoints.ToString());
-
-                return result.ToString();
-            }
-            catch (Exception ex)
-            {
-                return $"An error occurred: {ex.Message}";
             }
         }
     }
