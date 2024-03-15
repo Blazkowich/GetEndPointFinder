@@ -1,5 +1,5 @@
-﻿using System.Net;
-using System.Security.Cryptography;
+﻿using EndPointFinder.Helpers;
+using System.Net;
 using System.Text;
 
 namespace EndPointFinder
@@ -11,25 +11,9 @@ namespace EndPointFinder
             var url = @"https://www.megatechnica.ge/";
             var textPath = @"C:\Users\oilur\source\repos\EndPointFinder\EndPointFinder\Words\Dataset.txt";
 
-            var endpoints = new List<string>();
             int perfectlyDivisorNum = 5;
 
-            using (StreamReader reader = new StreamReader(textPath))
-            {
-                string line;
-                while ((line = reader.ReadLine()) != null)
-                {
-                    string[] words = line.Split(',');
-                    foreach (var word in words)
-                    {
-                        string trimmedWord = word.Trim(' ', '"');
-                        if (!string.IsNullOrWhiteSpace(trimmedWord))
-                        {
-                            endpoints.Add(trimmedWord);
-                        }
-                    }
-                }
-            }
+            var endpoints = await HelperMethods.WordTrimmerFromTxt(textPath);
 
             Task<string> task1 = GetEndpointsWithoutApi(url, endpoints, perfectlyDivisorNum);
             Task<string> task2 = GetEndpointsWithApi(url, endpoints, perfectlyDivisorNum);
@@ -43,6 +27,8 @@ namespace EndPointFinder
             Console.WriteLine($"Endpoints With S: {task3.Result}");
             Console.WriteLine($"Endpoints With Api And S: {task4.Result}");
         }
+
+        
 
         public static async Task<string> GetEndpointsWithApiAndS(string url, List<string> endpoints, int perfectlyDivisorNum)
         {
@@ -73,13 +59,7 @@ namespace EndPointFinder
                             successfulEndpoints.AppendLine(link);
                         }
 
-                        lock (Console.Out)
-                        {
-                            Interlocked.Increment(ref completedTasks);
-                            float progressPercentage = (float)completedTasks / totalTasks * 100;
-                            Console.Write($"\rLoading... {progressPercentage:F2}%   ");
-                        }
-
+                        HelperMethods.IncrementCompletedTasks(ref completedTasks, totalTasks);
 
                     }).ToArray();
                     await Task.WhenAll(tasks);
@@ -123,12 +103,7 @@ namespace EndPointFinder
                             successfulEndpoints.AppendLine(url + "api/" + endpoint);
                         }
 
-                        lock (Console.Out)
-                        {
-                            Interlocked.Increment(ref completedTasks);
-                            float progressPercentage = (float)completedTasks / totalTasks * 100;
-                            Console.Write($"\rLoading... {progressPercentage:F2}%   ");
-                        }
+                        HelperMethods.IncrementCompletedTasks(ref completedTasks, totalTasks);
 
                     }).ToArray();
 
@@ -173,12 +148,7 @@ namespace EndPointFinder
                             successfulEndpoints.AppendLine(url + endpoint);
                         }
 
-                        lock (Console.Out)
-                        {
-                            Interlocked.Increment(ref completedTasks);
-                            float progressPercentage = (float)completedTasks / totalTasks * 100;
-                            Console.Write($"\rLoading... {progressPercentage:F2}%   ");
-                        }
+                        HelperMethods.IncrementCompletedTasks(ref completedTasks, totalTasks);
 
                     }).ToArray();
 
@@ -222,12 +192,7 @@ namespace EndPointFinder
                             successfulEndpoints.AppendLine(url + "api/" + endpoint + "s");
                         }
 
-                        lock (Console.Out)
-                        {
-                            Interlocked.Increment(ref completedTasks);
-                            float progressPercentage = (float)completedTasks / totalTasks * 100;
-                            Console.Write($"\rLoading... {progressPercentage:F2}%   ");
-                        }
+                        HelperMethods.IncrementCompletedTasks(ref completedTasks, totalTasks);
 
                     }).ToArray();
 
