@@ -70,7 +70,7 @@ namespace EndPointFinder
 
                         var response = await httpClient.GetAsync(link);
 
-                        if (response.StatusCode == HttpStatusCode.OK)
+                        if (response.StatusCode == HttpStatusCode.OK || response.StatusCode == HttpStatusCode.Accepted)
                         {
                             successfulEndpoints.AppendLine(link);
                         }
@@ -109,7 +109,7 @@ namespace EndPointFinder
                     var tasks = batch.Select(async endpoint =>
                     {
                         var response = await httpClient.GetAsync(url + "api/" + endpoint);
-                        if (response.StatusCode == HttpStatusCode.OK)
+                        if (response.StatusCode == HttpStatusCode.OK || response.StatusCode == HttpStatusCode.Accepted)
                         {
                             successfulEndpoints.AppendLine(url + "api/" + endpoint);
                         }
@@ -148,7 +148,7 @@ namespace EndPointFinder
                     var tasks = batch.Select(async endpoint =>
                     {
                         var response = await httpClient.GetAsync(url + endpoint);
-                        if (response.StatusCode == HttpStatusCode.OK)
+                        if (response.StatusCode == HttpStatusCode.OK || response.StatusCode == HttpStatusCode.Accepted)
                         {
                             successfulEndpoints.AppendLine(url + endpoint);
                         }
@@ -186,7 +186,7 @@ namespace EndPointFinder
                     var tasks = batch.Select(async endpoint =>
                     {
                         var response = await httpClient.GetAsync(url + "api/" + endpoint + "s");
-                        if (response.StatusCode == HttpStatusCode.OK)
+                        if (response.StatusCode == HttpStatusCode.OK || response.StatusCode == HttpStatusCode.Accepted)
                         {
                             successfulEndpoints.AppendLine(url + "api/" + endpoint + "s");
                         }
