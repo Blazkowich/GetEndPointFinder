@@ -1,20 +1,15 @@
 ﻿using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.DevTools;
-using WebDriverManager;
-using WebDriverManager.DriverConfigs.Impl;
 using DevToolsSessionDomains = OpenQA.Selenium.DevTools.V122.DevToolsSessionDomains;
 using Network = OpenQA.Selenium.DevTools.V122.Network;
-using System;
-using System.IO;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 namespace ApiFinder
 {
     class Program
     {
-        static readonly string urlToTest = @"https://2nabiji.ge/en/product/ghvino-thethri-alavi-kakhuri-mshrali-294#";
+        static readonly string urlToTest = @"https://onoff.ge/";
         static readonly string logFilePath = $"network_requests_{DateTime.Now:yyyy-MM-dd-HH-mm-ss}.txt";
         static readonly string logApiKeyPath = $"ApiKey_requests_{DateTime.Now:yyyy-MM-dd-HH-mm-ss}.txt";
         static readonly object fileLock = new();

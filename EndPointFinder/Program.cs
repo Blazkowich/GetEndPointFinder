@@ -1,16 +1,6 @@
 ﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.Net;
-using System.Net.Http;
-using System.Net.Http.Json;
-using System.Reflection.PortableExecutable;
 using System.Text;
-using System.Text.Json;
-using System.Text.Json.Serialization;
-using System.Threading.Tasks;
 
 namespace EndPointFinder
 {
@@ -18,7 +8,7 @@ namespace EndPointFinder
     {
         static async Task Main(string[] args)
         {
-            var url = @"https://spargeorgia.com/";
+            var url = @"https://www.megatechnica.ge/";
             var urlForDownload = @"https://catalog-api.orinabiji.ge/catalog/api/orders";
             var textPath = @"C:\Users\oilur\source\repos\EndPointFinder\EndPointFinder\InputDataset\Dataset.txt";
             var endpoints = new List<string>();
@@ -62,6 +52,9 @@ namespace EndPointFinder
                                        .Select(group => group.Select(x => x.endpoint).ToList())
                                        .ToList();
 
+                int totalTasks = batches.Sum(batch => batch.Count);
+                int completedTasks = 0;
+
                 foreach (var batch in batches)
                 {
                     var tasks = batch.Select(async endpoint =>
@@ -74,10 +67,16 @@ namespace EndPointFinder
                         {
                             successfulEndpoints.AppendLine(link);
                         }
+
+                        Interlocked.Increment(ref completedTasks);
+                        float progressPercentage = (float)completedTasks / totalTasks * 100;
+                        Console.Write($"\rLoading... {progressPercentage:F2}%   ");
                     }).ToArray();
 
                     await Task.WhenAll(tasks);
                 }
+
+                Console.WriteLine();
 
                 var result = new StringBuilder();
                 result.AppendLine("Successful Endpoints With Api And S:");
@@ -104,6 +103,9 @@ namespace EndPointFinder
                     .Select(group => group.Select(x => x.endpoint).ToList())
                     .ToList();
 
+                int totalTasks = batches.Sum(batch => batch.Count);
+                int completedTasks = 0;
+
                 foreach (var batch in batches)
                 {
                     var tasks = batch.Select(async endpoint =>
@@ -113,10 +115,16 @@ namespace EndPointFinder
                         {
                             successfulEndpoints.AppendLine(url + "api/" + endpoint);
                         }
+
+                        Interlocked.Increment(ref completedTasks);
+                        float progressPercentage = (float)completedTasks / totalTasks * 100;
+                        Console.Write($"\rLoading... {progressPercentage:F2}%   ");
                     }).ToArray();
 
                     await Task.WhenAll(tasks);
                 }
+
+                Console.WriteLine();
 
                 var result = new StringBuilder();
                 result.AppendLine("Successful Endpoints:");
@@ -143,6 +151,9 @@ namespace EndPointFinder
                        .Select(group => group.Select(x => x.endpoint).ToList())
                        .ToList();
 
+                int totalTasks = batches.Sum(batch => batch.Count);
+                int completedTasks = 0;
+
                 foreach (var batch in batches)
                 {
                     var tasks = batch.Select(async endpoint =>
@@ -152,10 +163,16 @@ namespace EndPointFinder
                         {
                             successfulEndpoints.AppendLine(url + endpoint);
                         }
+
+                        Interlocked.Increment(ref completedTasks);
+                        float progressPercentage = (float)completedTasks / totalTasks * 100;
+                        Console.Write($"\rLoading... {progressPercentage:F2}%   ");
                     }).ToArray();
 
                     await Task.WhenAll(tasks);
                 }
+
+                Console.WriteLine();
 
                 var result = new StringBuilder();
                 result.AppendLine("Successful Endpoints Without Api:");
@@ -181,6 +198,9 @@ namespace EndPointFinder
                     .Select(group => group.Select(x => x.endpoint).ToList())
                     .ToList();
 
+                int totalTasks = batches.Sum(batch => batch.Count);
+                int completedTasks = 0;
+
                 foreach (var batch in batches)
                 {
                     var tasks = batch.Select(async endpoint =>
@@ -190,10 +210,16 @@ namespace EndPointFinder
                         {
                             successfulEndpoints.AppendLine(url + "api/" + endpoint + "s");
                         }
+
+                        Interlocked.Increment(ref completedTasks);
+                        float progressPercentage = (float)completedTasks / totalTasks * 100;
+                        Console.Write($"\rLoading... {progressPercentage:F2}%   ");
                     }).ToArray();
 
                     await Task.WhenAll(tasks);
                 }
+
+                Console.WriteLine();
 
                 var result = new StringBuilder();
                 result.AppendLine("Successful Endpoints:");
@@ -210,7 +236,7 @@ namespace EndPointFinder
 
 
 
-
+        // Setting are optimized on 2Nabiji
         public static async Task DownloadEndpointResults(string url)
         {
             try
