@@ -1,5 +1,5 @@
-﻿using Newtonsoft.Json;
-using System.Net;
+﻿using System.Net;
+using System.Security.Cryptography;
 using System.Text;
 
 namespace EndPointFinder
@@ -9,9 +9,10 @@ namespace EndPointFinder
         static async Task Main(string[] args)
         {
             var url = @"https://www.megatechnica.ge/";
-            var urlForDownload = @"https://catalog-api.orinabiji.ge/catalog/api/orders";
-            var textPath = @"C:\Users\oilur\source\repos\EndPointFinder\EndPointFinder\InputDataset\Dataset.txt";
+            var textPath = @"C:\Users\oilur\source\repos\EndPointFinder\EndPointFinder\Words\Dataset.txt";
+
             var endpoints = new List<string>();
+            int perfectlyDivisorNum = 5;
 
             using (StreamReader reader = new StreamReader(textPath))
             {
@@ -30,16 +31,20 @@ namespace EndPointFinder
                 }
             }
 
-            Console.WriteLine(await GetEndpointsWithApiAndS(url, endpoints));
-            Console.WriteLine(await GetEndpointsWithApi(url, endpoints));
-            Console.WriteLine(await GetEndpointsWithoutApi(url, endpoints));
-            Console.WriteLine(await GetEndpointsWithS(url, endpoints));
+            Task<string> task1 = GetEndpointsWithoutApi(url, endpoints, perfectlyDivisorNum);
+            Task<string> task2 = GetEndpointsWithApi(url, endpoints, perfectlyDivisorNum);
+            Task<string> task3 = GetEndpointsWithS(url, endpoints, perfectlyDivisorNum);
+            Task<string> task4 = GetEndpointsWithApiAndS(url, endpoints, perfectlyDivisorNum);
 
-            //await DownloadEndpointResults(urlForDownload);
-            //await WriteUserAndActionPerformerDetails(urlForDownload);
+            await Task.WhenAll(task1, task2, task3, task4);
 
+            Console.WriteLine($"Endpoints Without Anything: {task1.Result}");
+            Console.WriteLine($"Endpoints With Api: {task2.Result}");
+            Console.WriteLine($"Endpoints With S: {task3.Result}");
+            Console.WriteLine($"Endpoints With Api And S: {task4.Result}");
         }
-        public static async Task<string> GetEndpointsWithApiAndS(string url, List<string> endpoints)
+
+        public static async Task<string> GetEndpointsWithApiAndS(string url, List<string> endpoints, int perfectlyDivisorNum)
         {
             try
             {
@@ -48,7 +53,7 @@ namespace EndPointFinder
                 using var httpClient = new HttpClient();
 
                 var batches = endpoints.Select((endpoint, index) => new { endpoint, index })
-                                       .GroupBy(x => x.index / 5)
+                                       .GroupBy(x => x.index / perfectlyDivisorNum)
                                        .Select(group => group.Select(x => x.endpoint).ToList())
                                        .ToList();
 
@@ -68,15 +73,17 @@ namespace EndPointFinder
                             successfulEndpoints.AppendLine(link);
                         }
 
-                        Interlocked.Increment(ref completedTasks);
-                        float progressPercentage = (float)completedTasks / totalTasks * 100;
-                        Console.Write($"\rLoading... {progressPercentage:F2}%   ");
-                    }).ToArray();
+                        lock (Console.Out)
+                        {
+                            Interlocked.Increment(ref completedTasks);
+                            float progressPercentage = (float)completedTasks / totalTasks * 100;
+                            Console.Write($"\rLoading... {progressPercentage:F2}%   ");
+                        }
 
+
+                    }).ToArray();
                     await Task.WhenAll(tasks);
                 }
-
-                Console.WriteLine();
 
                 var result = new StringBuilder();
                 result.AppendLine("Successful Endpoints With Api And S:");
@@ -90,7 +97,7 @@ namespace EndPointFinder
             }
         }
 
-        public static async Task<string> GetEndpointsWithApi(string url, List<string> endpoints)
+        public static async Task<string> GetEndpointsWithApi(string url, List<string> endpoints, int perfectlyDivisorNum)
         {
             try
             {
@@ -99,7 +106,7 @@ namespace EndPointFinder
                 using var httpClient = new HttpClient();
 
                 var batches = endpoints.Select((endpoint, index) => new { endpoint, index })
-                    .GroupBy(x => x.index / 5)
+                    .GroupBy(x => x.index / perfectlyDivisorNum)
                     .Select(group => group.Select(x => x.endpoint).ToList())
                     .ToList();
 
@@ -116,18 +123,20 @@ namespace EndPointFinder
                             successfulEndpoints.AppendLine(url + "api/" + endpoint);
                         }
 
-                        Interlocked.Increment(ref completedTasks);
-                        float progressPercentage = (float)completedTasks / totalTasks * 100;
-                        Console.Write($"\rLoading... {progressPercentage:F2}%   ");
+                        lock (Console.Out)
+                        {
+                            Interlocked.Increment(ref completedTasks);
+                            float progressPercentage = (float)completedTasks / totalTasks * 100;
+                            Console.Write($"\rLoading... {progressPercentage:F2}%   ");
+                        }
+
                     }).ToArray();
 
                     await Task.WhenAll(tasks);
                 }
 
-                Console.WriteLine();
-
                 var result = new StringBuilder();
-                result.AppendLine("Successful Endpoints:");
+                result.AppendLine("Successful Endpoints With Api:");
                 result.AppendLine(successfulEndpoints.ToString());
 
                 return result.ToString();
@@ -138,7 +147,7 @@ namespace EndPointFinder
             }
         }
 
-        public static async Task<string> GetEndpointsWithoutApi(string url, List<string> endpoints)
+        public static async Task<string> GetEndpointsWithoutApi(string url, List<string> endpoints, int perfectlyDivisorNum)
         {
             try
             {
@@ -147,7 +156,7 @@ namespace EndPointFinder
                 using var httpClient = new HttpClient();
 
                 var batches = endpoints.Select((endpoint, index) => new { endpoint, index })
-                       .GroupBy(x => x.index / 5)
+                       .GroupBy(x => x.index / perfectlyDivisorNum)
                        .Select(group => group.Select(x => x.endpoint).ToList())
                        .ToList();
 
@@ -164,15 +173,17 @@ namespace EndPointFinder
                             successfulEndpoints.AppendLine(url + endpoint);
                         }
 
-                        Interlocked.Increment(ref completedTasks);
-                        float progressPercentage = (float)completedTasks / totalTasks * 100;
-                        Console.Write($"\rLoading... {progressPercentage:F2}%   ");
+                        lock (Console.Out)
+                        {
+                            Interlocked.Increment(ref completedTasks);
+                            float progressPercentage = (float)completedTasks / totalTasks * 100;
+                            Console.Write($"\rLoading... {progressPercentage:F2}%   ");
+                        }
+
                     }).ToArray();
 
                     await Task.WhenAll(tasks);
                 }
-
-                Console.WriteLine();
 
                 var result = new StringBuilder();
                 result.AppendLine("Successful Endpoints Without Api:");
@@ -186,7 +197,7 @@ namespace EndPointFinder
             }
         }
 
-        public static async Task<string> GetEndpointsWithS(string url, List<string> endpoints)
+        public static async Task<string> GetEndpointsWithS(string url, List<string> endpoints, int perfectlyDivisorNum)
         {
             try
             {
@@ -194,7 +205,7 @@ namespace EndPointFinder
 
                 using var httpClient = new HttpClient();
                 var batches = endpoints.Select((endpoint, index) => new { endpoint, index })
-                    .GroupBy(x => x.index / 5)
+                    .GroupBy(x => x.index / perfectlyDivisorNum)
                     .Select(group => group.Select(x => x.endpoint).ToList())
                     .ToList();
 
@@ -211,18 +222,20 @@ namespace EndPointFinder
                             successfulEndpoints.AppendLine(url + "api/" + endpoint + "s");
                         }
 
-                        Interlocked.Increment(ref completedTasks);
-                        float progressPercentage = (float)completedTasks / totalTasks * 100;
-                        Console.Write($"\rLoading... {progressPercentage:F2}%   ");
+                        lock (Console.Out)
+                        {
+                            Interlocked.Increment(ref completedTasks);
+                            float progressPercentage = (float)completedTasks / totalTasks * 100;
+                            Console.Write($"\rLoading... {progressPercentage:F2}%   ");
+                        }
+
                     }).ToArray();
 
                     await Task.WhenAll(tasks);
                 }
 
-                Console.WriteLine();
-
                 var result = new StringBuilder();
-                result.AppendLine("Successful Endpoints:");
+                result.AppendLine("Successful Endpoints With S:");
                 result.AppendLine(successfulEndpoints.ToString());
 
                 return result.ToString();
@@ -232,91 +245,5 @@ namespace EndPointFinder
                 return $"An error occurred: {ex.Message}";
             }
         }
-
-
-
-
-        // Setting are optimized on 2Nabiji
-        public static async Task DownloadEndpointResults(string url)
-        {
-            try
-            {
-                using var httpClient = new HttpClient();
-                HttpResponseMessage response = await httpClient.GetAsync(url);
-
-                if (response.IsSuccessStatusCode)
-                {
-                    string jsonString = await response.Content.ReadAsStringAsync();
-
-                    Root root = JsonConvert.DeserializeObject<Root>(jsonString);
-
-                    var filePath = Path.Combine(@"C:\Users\oilur\source\repos\EndPointFinder\EndPointFinder\Data", $"order_endpoint_{DateTime.Now:yyyy-MM-dd-HH-mm-ss}.txt");
-
-                    foreach (var order in root.Data.Orders)
-                    {
-                        string serializedOrder = JsonConvert.SerializeObject(order, Formatting.Indented);
-
-                        await File.AppendAllTextAsync(filePath, serializedOrder + Environment.NewLine);
-                    }
-
-                    Console.WriteLine("Orders written to file successfully.");
-
-                }
-
-                else
-                {
-                    Console.WriteLine($"Failed to download data. Status code: {response.StatusCode}");
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
-        }
-
-        public static async Task WriteUserAndActionPerformerDetails(string url)
-        {
-            try
-            {
-                using var httpClient = new HttpClient();
-                HttpResponseMessage response = await httpClient.GetAsync(url);
-
-                if (response.IsSuccessStatusCode)
-                {
-                    string jsonString = await response.Content.ReadAsStringAsync();
-
-                    Root root = JsonConvert.DeserializeObject<Root>(jsonString);
-
-                    var filePath = Path.Combine(@"C:\Users\oilur\source\repos\EndPointFinder\EndPointFinder\Data", $"user_and_action_performer_details_{DateTime.Now:yyyy-MM-dd-HH-mm-ss}.txt");
-
-                    foreach (var order in root.Data.Orders)
-                    {
-                        var user = order.user;
-                        var selectedLoc = order.selectedAddress;
-                        string userDetail = $"User - \n First Name: {user.firstName},\n Last Name: {user.lastName},\n Email: {user.email},\n Mobile Number: {user.phoneNumber}, \n Location: {selectedLoc} \n\t";
-
-                        var actionPerformer = order.actionPerformer;
-                        if (actionPerformer != null)
-                        {
-                            string actionPerformerDetail = $"Action Performer - \n First Name: {actionPerformer.firstName},\n Last Name: {actionPerformer.lastName} \n\t";
-                            await File.AppendAllTextAsync(filePath, actionPerformerDetail + Environment.NewLine);
-                        }
-
-                        await File.AppendAllTextAsync(filePath, userDetail + Environment.NewLine);
-                    }
-
-                    Console.WriteLine("User and Action Performer details written to file successfully.");
-                }
-                else
-                {
-                    Console.WriteLine($"Failed to download data. Status code: {response.StatusCode}");
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
-        }
     }
-
 }
