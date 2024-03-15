@@ -16,6 +16,7 @@ namespace ApiFinder
     {
         static readonly string urlToTest = @"https://2nabiji.ge/en/product/ghvino-thethri-alavi-kakhuri-mshrali-294#";
         static readonly string logFilePath = $"network_requests_{DateTime.Now:yyyy-MM-dd-HH-mm-ss}.txt";
+        static readonly string logApiKeyPath = $"ApiKey_requests_{DateTime.Now:yyyy-MM-dd-HH-mm-ss}.txt";
         static readonly object fileLock = new();
 
         static async Task Main(string[] args)
@@ -40,6 +41,15 @@ namespace ApiFinder
                     {
                         string requestInfo = $"{DateTime.Now} - Request URL: {e.Request.Url}, Initiator URL: {e.Initiator.Url}";
                         WriteToFile(requestInfo);
+                    }
+                };
+
+                devToolsSession.Network.RequestWillBeSent += (sender, e) =>
+                {
+                    if (Regex.IsMatch(e.Request.Url, @"\b(apiKey|key)\b"))
+                    {
+                        string requestInfo = $"{DateTime.Now} - Request URL: {e.Request.Url}, Initiator URL: {e.Initiator.Url}";
+                        WriteApiKeyToFile(requestInfo);
                     }
                 };
 
@@ -91,7 +101,23 @@ namespace ApiFinder
             {
                 try
                 {
-                    using StreamWriter writer = new StreamWriter(@"C:\Users\oilur\source\repos\EndPointFinder\ApiFinder\Records\" + logFilePath, true);
+                    using StreamWriter writer = new StreamWriter(@"C:\Users\oilur\source\repos\EndPointFinder\ApiFinder\Records\NetworkLogs\" + logFilePath, true);
+                    writer.WriteLine(content);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"An error occurred while writing to the file: {ex.Message}");
+                }
+            }
+        }
+
+        static void WriteApiKeyToFile(string content)
+        {
+            lock (fileLock)
+            {
+                try
+                {
+                    using StreamWriter writer = new StreamWriter(@"C:\Users\oilur\source\repos\EndPointFinder\ApiFinder\Records\ApiKeyLogs\" + logApiKeyPath, true);
                     writer.WriteLine(content);
                 }
                 catch (Exception ex)

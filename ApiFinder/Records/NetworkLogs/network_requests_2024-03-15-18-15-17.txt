@@ -1,0 +1,37 @@
+3/15/2024 6:15:18 PM - Request URL: https://sentry.orinabiji.ge/api/2/envelope/?sentry_key=e76351e6b0744259b70d5e7bd832e1ad&sentry_version=7, Initiator URL: 
+3/15/2024 6:15:18 PM - Request URL: https://kari-api.orinabiji.ge/kari/api/menuConfig?lang=en&status=true, Initiator URL: https://kari-api.orinabiji.ge/kari/api/menuConfig?lang=en&status=true
+3/15/2024 6:15:18 PM - Request URL: https://kari-api.orinabiji.ge/kari/api/configs?projectKey=ecommerce, Initiator URL: https://kari-api.orinabiji.ge/kari/api/configs?projectKey=ecommerce
+3/15/2024 6:15:18 PM - Request URL: https://catalog-api.orinabiji.ge/catalog/api/categories/thin?lang=en, Initiator URL: https://catalog-api.orinabiji.ge/catalog/api/categories/thin?lang=en
+3/15/2024 6:15:18 PM - Request URL: https://maps.googleapis.com/maps/api/js?language=en&key=AIzaSyBHTqnU-V9xGyBxnZmBmWZpEeIi31dPrs0&libraries=places&callback=Function.prototype, Initiator URL: 
+3/15/2024 6:15:18 PM - Request URL: https://2nabiji.ge/api/auth/me, Initiator URL: 
+3/15/2024 6:15:18 PM - Request URL: https://fourth.media.2nabiji.ge/api/files/resize/300/300/61e535f1790cd9c8117935b9/ghvino-thethri-alavi-kakhuri-mshrali-294.webp, Initiator URL: 
+3/15/2024 6:15:18 PM - Request URL: https://kari-api.orinabiji.ge/kari/api/menuConfig?lang=en&status=true, Initiator URL: 
+3/15/2024 6:15:18 PM - Request URL: https://kari-api.orinabiji.ge/kari/api/configs?projectKey=ecommerce, Initiator URL: 
+3/15/2024 6:15:18 PM - Request URL: https://catalog-api.orinabiji.ge/catalog/api/categories/thin?lang=en, Initiator URL: 
+3/15/2024 6:15:18 PM - Request URL: https://catalog-api.orinabiji.ge/catalog/api/orders/review/unRead, Initiator URL: 
+3/15/2024 6:15:18 PM - Request URL: https://catalog-api.orinabiji.ge/catalog/api/orders/review/unRead, Initiator URL: https://catalog-api.orinabiji.ge/catalog/api/orders/review/unRead
+3/15/2024 6:15:18 PM - Request URL: https://kari-api.orinabiji.ge/kari/api/cityState/shop/states?platform=1, Initiator URL: https://kari-api.orinabiji.ge/kari/api/cityState/shop/states?platform=1
+3/15/2024 6:15:18 PM - Request URL: https://first.media.2nabiji.ge/api/files/resize/300/300/61e535f1790cd9c8117935b9/ghvino-thethri-alavi-kakhuri-mshrali-294.webp, Initiator URL: 
+3/15/2024 6:15:18 PM - Request URL: https://kari-api.orinabiji.ge/kari/api/cityState/shop/states?platform=1, Initiator URL: 
+3/15/2024 6:15:18 PM - Request URL: https://catalog-api.orinabiji.ge/catalog/api/carts?cartId=&lang=en&userId=&warehouseId=&repeatId=, Initiator URL: 
+3/15/2024 6:15:18 PM - Request URL: https://catalog-api.orinabiji.ge/catalog/api/carts?cartId=&lang=en&userId=&warehouseId=&repeatId=, Initiator URL: https://catalog-api.orinabiji.ge/catalog/api/carts?cartId=&lang=en&userId=&warehouseId=&repeatId=
+3/15/2024 6:15:18 PM - Request URL: https://third.media.2nabiji.ge/api/files/resize/300/300/61e535f1790cd9c8117935b9/ghvino-thethri-alavi-kakhuri-mshrali-294.webp, Initiator URL: 
+3/15/2024 6:15:18 PM - Request URL: https://catalog-api.orinabiji.ge/catalog/api/carts?cartId=&lang=en&userId=&warehouseId=&repeatId=, Initiator URL: 
+3/15/2024 6:15:18 PM - Request URL: https://catalog-api.orinabiji.ge/catalog/api/carts?cartId=&lang=en&userId=&warehouseId=&repeatId=, Initiator URL: https://catalog-api.orinabiji.ge/catalog/api/carts?cartId=&lang=en&userId=&warehouseId=&repeatId=
+3/15/2024 6:15:18 PM - Request URL: https://sentry.orinabiji.ge/api/2/envelope/?sentry_key=e76351e6b0744259b70d5e7bd832e1ad&sentry_version=7, Initiator URL: https://sentry.orinabiji.ge/api/2/envelope/?sentry_key=e76351e6b0744259b70d5e7bd832e1ad&sentry_version=7
+3/15/2024 6:15:18 PM - Request URL: https://sentry.orinabiji.ge/api/2/envelope/?sentry_key=e76351e6b0744259b70d5e7bd832e1ad&sentry_version=7, Initiator URL: https://sentry.orinabiji.ge/api/2/envelope/?sentry_key=e76351e6b0744259b70d5e7bd832e1ad&sentry_version=7
+3/15/2024 6:15:18 PM - Request URL: https://sentry.orinabiji.ge/api/2/envelope/?sentry_key=e76351e6b0744259b70d5e7bd832e1ad&sentry_version=7, Initiator URL: https://sentry.orinabiji.ge/api/2/envelope/?sentry_key=e76351e6b0744259b70d5e7bd832e1ad&sentry_version=7
+3/15/2024 6:15:18 PM - Request URL: https://sentry.orinabiji.ge/api/2/envelope/?sentry_key=e76351e6b0744259b70d5e7bd832e1ad&sentry_version=7, Initiator URL: 
+3/15/2024 6:15:18 PM - Request URL: https://sentry.orinabiji.ge/api/2/envelope/?sentry_key=e76351e6b0744259b70d5e7bd832e1ad&sentry_version=7, Initiator URL: 
+3/15/2024 6:15:18 PM - Request URL: https://sentry.orinabiji.ge/api/2/envelope/?sentry_key=e76351e6b0744259b70d5e7bd832e1ad&sentry_version=7, Initiator URL: https://sentry.orinabiji.ge/api/2/envelope/?sentry_key=e76351e6b0744259b70d5e7bd832e1ad&sentry_version=7
+3/15/2024 6:15:18 PM - Request URL: https://sentry.orinabiji.ge/api/2/envelope/?sentry_key=e76351e6b0744259b70d5e7bd832e1ad&sentry_version=7, Initiator URL: 
+3/15/2024 6:15:18 PM - Request URL: https://sentry.orinabiji.ge/api/2/envelope/?sentry_key=e76351e6b0744259b70d5e7bd832e1ad&sentry_version=7, Initiator URL: 
+3/15/2024 6:15:18 PM - Request URL: https://fourth.media.2nabiji.ge/api/files/resize/300/300/61e535f1790cd9c8117935b9/ghvino-thethri-alavi-kakhuri-mshrali-294.webp, Initiator URL: 
+3/15/2024 6:15:18 PM - Request URL: https://sentry.orinabiji.ge/api/2/envelope/?sentry_key=e76351e6b0744259b70d5e7bd832e1ad&sentry_version=7, Initiator URL: https://sentry.orinabiji.ge/api/2/envelope/?sentry_key=e76351e6b0744259b70d5e7bd832e1ad&sentry_version=7
+3/15/2024 6:15:18 PM - Request URL: https://sentry.orinabiji.ge/api/2/envelope/?sentry_key=e76351e6b0744259b70d5e7bd832e1ad&sentry_version=7, Initiator URL: https://sentry.orinabiji.ge/api/2/envelope/?sentry_key=e76351e6b0744259b70d5e7bd832e1ad&sentry_version=7
+3/15/2024 6:15:18 PM - Request URL: https://sentry.orinabiji.ge/api/2/envelope/?sentry_key=e76351e6b0744259b70d5e7bd832e1ad&sentry_version=7, Initiator URL: 
+3/15/2024 6:15:18 PM - Request URL: https://sentry.orinabiji.ge/api/2/envelope/?sentry_key=e76351e6b0744259b70d5e7bd832e1ad&sentry_version=7, Initiator URL: 
+3/15/2024 6:15:18 PM - Request URL: https://sentry.orinabiji.ge/api/2/envelope/?sentry_key=e76351e6b0744259b70d5e7bd832e1ad&sentry_version=7, Initiator URL: 
+3/15/2024 6:15:18 PM - Request URL: https://sentry.orinabiji.ge/api/2/envelope/?sentry_key=e76351e6b0744259b70d5e7bd832e1ad&sentry_version=7, Initiator URL: 
+3/15/2024 6:15:18 PM - Request URL: https://sentry.orinabiji.ge/api/2/envelope/?sentry_key=e76351e6b0744259b70d5e7bd832e1ad&sentry_version=7, Initiator URL: https://sentry.orinabiji.ge/api/2/envelope/?sentry_key=e76351e6b0744259b70d5e7bd832e1ad&sentry_version=7
+3/15/2024 6:15:18 PM - Request URL: https://sentry.orinabiji.ge/api/2/envelope/?sentry_key=e76351e6b0744259b70d5e7bd832e1ad&sentry_version=7, Initiator URL: https://sentry.orinabiji.ge/api/2/envelope/?sentry_key=e76351e6b0744259b70d5e7bd832e1ad&sentry_version=7
