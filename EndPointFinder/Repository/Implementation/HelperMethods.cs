@@ -99,44 +99,16 @@ public class HelperMethods : IHelperMethods
         return JsonSerializer.Deserialize<Config>(json);
     }
 
-    //public void WriteToFile(string content)
-    //{
-    //    lock (fileLock)
-    //    {
-    //        try
-    //        {
-    //            using StreamWriter writer = new StreamWriter(@"C:\Users\oilur\source\repos\EndPointFinder\EndPointFinder\Records\NetworkLogs\" + $"network_requests_{DateTime.Now:yyyy-MM-dd-HH-mm}.txt", true);
-    //            writer.WriteLine(content);
-    //        }
-    //        catch (Exception ex)
-    //        {
-    //            Console.WriteLine($"An error occurred while writing to the file: {ex.Message}");
-    //        }
-    //    }
-    //}
-
-    //public void WriteApiKeyToFile(string content)
-    //{
-    //    lock (fileLock)
-    //    {
-    //        try
-    //        {
-    //            using StreamWriter writer = new StreamWriter(@"C:\Users\oilur\source\repos\EndPointFinder\EndPointFinder\Records\ApiKeyLogs\" + $"ApiKey_requests_{DateTime.Now:yyyy-MM-dd-HH-mm}.txt", true);
-    //            writer.WriteLine(content);
-    //        }
-    //        catch (Exception ex)
-    //        {
-    //            Console.WriteLine($"An error occurred while writing to the file: {ex.Message}");
-    //        }
-    //    }
-    //}
     public void WriteToFile(string content)
     {
         lock (fileLock)
         {
             try
             {
-                string currentDirectory = AppDomain.CurrentDomain.BaseDirectory;
+                string userDirectory = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
+
+                string currentDirectory = Path.Combine(userDirectory, "EndpointFinder");
+
                 string logsDirectory = Path.Combine(currentDirectory, "Records", "NetworkLogs");
 
                 Directory.CreateDirectory(logsDirectory);
@@ -161,7 +133,10 @@ public class HelperMethods : IHelperMethods
         {
             try
             {
-                string currentDirectory = AppDomain.CurrentDomain.BaseDirectory;
+                string userDirectory = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
+
+                string currentDirectory = Path.Combine(userDirectory, "EndpointFinder");
+
                 string logsDirectory = Path.Combine(currentDirectory, "Records", "ApiKeyLogs");
 
                 Directory.CreateDirectory(logsDirectory);
