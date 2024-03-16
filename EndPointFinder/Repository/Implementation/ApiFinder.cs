@@ -16,7 +16,7 @@ public class ApiFinder : IApiFinder
     {
         ChromeOptions chromeOptions = new();
         chromeOptions.AddArguments("--headless");
-        ChromeDriverService chromeDriverService = ChromeDriverService.CreateDefaultService(@"C:\Users\oilur\source\repos\EndPointFinder\ApiFinder\", "chromedriver.exe");
+        ChromeDriverService chromeDriverService = ChromeDriverService.CreateDefaultService(@"C:\Users\oilur\source\repos\EndPointFinder\EndPointFinder\Repository\Config\", "chromedriver.exe");
 
         using IWebDriver driver = new ChromeDriver(chromeDriverService, chromeOptions);
         try
@@ -46,9 +46,9 @@ public class ApiFinder : IApiFinder
                 }
             };
 
-            NetworkInterceptionTest(urlToTest, devToolsSession, driver);
-            SetAdditionalHeadersTest(urlToTest, devToolsSession, driver);
-            SetUserAgentTest(urlToTest, devToolsSession, driver);
+            await NetworkInterceptionTest(urlToTest, devToolsSession, driver);
+            await SetAdditionalHeadersTest(urlToTest, devToolsSession, driver);
+            await SetUserAgentTest(urlToTest, devToolsSession, driver);
         }
         catch (Exception ex)
         {
@@ -56,9 +56,9 @@ public class ApiFinder : IApiFinder
         }
     }
 
-    public void NetworkInterceptionTest(string urlToTest, DevToolsSessionDomains devToolsSession, IWebDriver driver)
+    public async Task NetworkInterceptionTest(string urlToTest, DevToolsSessionDomains devToolsSession, IWebDriver driver)
     {
-        devToolsSession.Network.SetBlockedURLs(new Network.SetBlockedURLsCommandSettings()
+        await devToolsSession.Network.SetBlockedURLs(new Network.SetBlockedURLsCommandSettings()
         {
             Urls = ["*://*/*.css", "*://*/*.jpg", "*://*/*.png"]
         });
@@ -66,11 +66,11 @@ public class ApiFinder : IApiFinder
         driver.Navigate().GoToUrl(urlToTest);
     }
 
-    public void SetAdditionalHeadersTest(string urlToTest, DevToolsSessionDomains devToolsSession, IWebDriver driver)
+    public async Task SetAdditionalHeadersTest(string urlToTest, DevToolsSessionDomains devToolsSession, IWebDriver driver)
     {
         var extraHeader = new Network.Headers();
         extraHeader.Add("headerName", "executeHacked");
-        devToolsSession.Network.SetExtraHTTPHeaders(new Network.SetExtraHTTPHeadersCommandSettings()
+        await devToolsSession.Network.SetExtraHTTPHeaders(new Network.SetExtraHTTPHeadersCommandSettings()
         {
             Headers = extraHeader
         });
@@ -78,9 +78,9 @@ public class ApiFinder : IApiFinder
         driver.Navigate().GoToUrl(urlToTest);
     }
 
-    public void SetUserAgentTest(string urlToTest, DevToolsSessionDomains devToolsSession, IWebDriver driver)
+    public async Task SetUserAgentTest(string urlToTest, DevToolsSessionDomains devToolsSession, IWebDriver driver)
     {
-        devToolsSession.Network.SetUserAgentOverride(new Network.SetUserAgentOverrideCommandSettings()
+        await devToolsSession.Network.SetUserAgentOverride(new Network.SetUserAgentOverrideCommandSettings()
         {
             UserAgent = "Mozilla/5.0 (iPhone; CPU iPhone OS 12_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko)"
         });

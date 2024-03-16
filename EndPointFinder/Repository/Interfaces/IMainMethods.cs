@@ -4,5 +4,5 @@ public interface IMainMethods
 {
     Task ScanWebSiteForEnpoints(string url);
 
-    void ScanWebSiteForApis(string url);
+    Task ScanWebSiteForApis(string url);
 }

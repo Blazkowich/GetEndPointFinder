@@ -15,7 +15,6 @@ public class MainMethods : IMainMethods
     public async Task ScanWebSiteForEnpoints(string url)
     {
         var configData = await _unitOfWork.HelperMethods.LoadConfig();
-
         var endpoints = await _unitOfWork.HelperMethods.WordTrimmerFromTxt(configData.TextPath);
 
         Task<string> task1 = _unitOfWork.EndpointFinder.GetEndpointsWithoutApi(url, endpoints, configData.PerfectlyDivisorNum);
@@ -31,15 +30,15 @@ public class MainMethods : IMainMethods
         Console.WriteLine($"Endpoints With Api And S: {task4.Result}");
     }
 
-    public void ScanWebSiteForApis(string url)
+    public async Task ScanWebSiteForApis(string url)
     {
         try
         {
-            Console.WriteLine(_unitOfWork.ApiFinder.ScanAndFind(url));
+            await _unitOfWork.ApiFinder.ScanAndFind(url);
         }
         catch (Exception ex)
         {
-            Console.WriteLine(ex.Message );
+            Console.WriteLine(ex.Message);
         }
     }
 }
