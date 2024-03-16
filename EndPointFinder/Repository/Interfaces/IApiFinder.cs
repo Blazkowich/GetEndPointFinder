@@ -5,7 +5,7 @@ namespace EndPointFinder.Repository.Interfaces;
 
 public interface IApiFinder
 {
-    Task ScanAndFind(string urlToTest);
+    Task<List<string>> ScanAndFind(string urlToTest);
 
     Task NetworkInterceptionTest(string urlToTest, DevToolsSessionDomains devToolsSession, IWebDriver driver);
 

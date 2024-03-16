@@ -12,11 +12,12 @@ public class ApiFinder : IApiFinder
 {
     private readonly IHelperMethods _helperMethods = new HelperMethods();
 
-    public async Task ScanAndFind(string urlToTest)
+    public async Task<List<string>> ScanAndFind(string urlToTest)
     {
         ChromeOptions chromeOptions = new();
         chromeOptions.AddArguments("--headless");
         ChromeDriverService chromeDriverService = ChromeDriverService.CreateDefaultService(@"C:\Users\oilur\source\repos\EndPointFinder\EndPointFinder\Repository\Config\", "chromedriver.exe");
+        var results = new List<string>();
 
         using IWebDriver driver = new ChromeDriver(chromeDriverService, chromeOptions);
         try
@@ -32,8 +33,9 @@ public class ApiFinder : IApiFinder
             {
                 if (Regex.IsMatch(e.Request.Url, @"\bapi\b"))
                 {
-                    string requestInfo = $"{DateTime.Now} - Request URL: {e.Request.Url}, Initiator URL: {e.Initiator.Url}";
+                    string requestInfo = $"Api - {DateTime.Now} - Request URL: {e.Request.Url}, Initiator URL: {e.Initiator.Url}";
                     _helperMethods.WriteToFile(requestInfo);
+                    results.Add(requestInfo);
                 }
             };
 
@@ -41,18 +43,21 @@ public class ApiFinder : IApiFinder
             {
                 if (Regex.IsMatch(e.Request.Url, @"\b(apiKey|key)\b"))
                 {
-                    string requestInfo = $"{DateTime.Now} - Request URL: {e.Request.Url}, Initiator URL: {e.Initiator.Url}";
+                    string requestInfo = $"Key - {DateTime.Now} - Request URL: {e.Request.Url}, Initiator URL: {e.Initiator.Url}";
                     _helperMethods.WriteApiKeyToFile(requestInfo);
+                    results.Add(requestInfo);
                 }
             };
 
             await NetworkInterceptionTest(urlToTest, devToolsSession, driver);
             await SetAdditionalHeadersTest(urlToTest, devToolsSession, driver);
             await SetUserAgentTest(urlToTest, devToolsSession, driver);
+
+            return results;
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+           return new List<string> { $"An error occurred: {ex.Message}" };
         }
     }
 

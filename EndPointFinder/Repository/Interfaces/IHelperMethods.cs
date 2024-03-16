@@ -16,9 +16,11 @@ public interface IHelperMethods
 
     void WriteToFile(string content);
 
+    void WriteEndpointsToFile(string content);
+
     void WriteApiKeyToFile(string content);
 
-    string GetValidUrl();
+    Task<string> GetValidUrl(string inputUrl);
 
     bool IsValidUrl(string url);
 }

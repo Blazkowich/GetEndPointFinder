@@ -30,11 +30,13 @@ public class EndpointFinder : IEndpointFinder
                 {
                     var link = url + "api/" + endpoint + "s/";
 
-                    var response = await httpClient.GetAsync(link);
+                    var response = await httpClient.GetAsync("api/" + endpoint + "s/");
 
                     if (response.StatusCode == HttpStatusCode.OK || response.StatusCode == HttpStatusCode.Accepted)
                     {
-                        successfulEndpoints.AppendLine(link);
+                        successfulEndpoints.Append("With Api And S :");
+                        successfulEndpoints.AppendLine(url + endpoint + "s");
+                        successfulEndpoints.AppendLine();
                     }
 
                     _helperMethods.IncrementCompletedTasks(ref completedTasks, totalTasks);
@@ -78,7 +80,9 @@ public class EndpointFinder : IEndpointFinder
                     var response = await httpClient.GetAsync(url + "api/" + endpoint);
                     if (response.StatusCode == HttpStatusCode.OK || response.StatusCode == HttpStatusCode.Accepted)
                     {
+                        successfulEndpoints.Append("With Api :");
                         successfulEndpoints.AppendLine(url + "api/" + endpoint);
+                        successfulEndpoints.AppendLine();
                     }
 
                     _helperMethods.IncrementCompletedTasks(ref completedTasks, totalTasks);
@@ -123,7 +127,9 @@ public class EndpointFinder : IEndpointFinder
                     var response = await httpClient.GetAsync(url + endpoint);
                     if (response.StatusCode == HttpStatusCode.OK || response.StatusCode == HttpStatusCode.Accepted)
                     {
+                        successfulEndpoints.Append("Clean Endpoints :");
                         successfulEndpoints.AppendLine(url + endpoint);
+                        successfulEndpoints.AppendLine();
                     }
 
                     _helperMethods.IncrementCompletedTasks(ref completedTasks, totalTasks);
@@ -164,10 +170,12 @@ public class EndpointFinder : IEndpointFinder
             {
                 var tasks = batch.Select(async endpoint =>
                 {
-                    var response = await httpClient.GetAsync(url + "api/" + endpoint + "s");
+                    var response = await httpClient.GetAsync(url + endpoint + "s");
                     if (response.StatusCode == HttpStatusCode.OK || response.StatusCode == HttpStatusCode.Accepted)
                     {
-                        successfulEndpoints.AppendLine(url + "api/" + endpoint + "s");
+                        successfulEndpoints.Append("With S :");
+                        successfulEndpoints.AppendLine(url + endpoint + "s");
+                        successfulEndpoints.AppendLine();
                     }
 
                     _helperMethods.IncrementCompletedTasks(ref completedTasks, totalTasks);

@@ -1,0 +1,6 @@
+@ScaNet_HostAddress = http://localhost:5272
+
+GET {{ScaNet_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

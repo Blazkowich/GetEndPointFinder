@@ -98,7 +98,7 @@ public class HelperMethods : IHelperMethods
     {
         string baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
 
-        string jsonFilePath = Path.Combine(baseDirectory, "..", "..", "..", "Repository", "Config", "Config.json");
+        string jsonFilePath = Path.Combine(baseDirectory, "..", "..", "..", "..", "EndpointFinder", "Repository", "Config", "Config.json");
 
         jsonFilePath = Path.GetFullPath(jsonFilePath);
 
@@ -117,7 +117,35 @@ public class HelperMethods : IHelperMethods
 
                 string currentDirectory = Path.Combine(userDirectory, "EndpointFinder");
 
-                string logsDirectory = Path.Combine(currentDirectory, "Records", "NetworkLogs");
+                string logsDirectory = Path.Combine(currentDirectory, "Records", "Endpoints");
+
+                Directory.CreateDirectory(logsDirectory);
+
+                string filePath = Path.Combine(logsDirectory, $"endpoints_{DateTime.Now:yyyy-MM-dd-HH-mm}.txt");
+
+                using (StreamWriter writer = new StreamWriter(filePath, true))
+                {
+                    writer.WriteLine(content);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred while writing to the file: {ex.Message}");
+            }
+        }
+    }
+
+    public void WriteEndpointsToFile(string content)
+    {
+        lock (fileLock)
+        {
+            try
+            {
+                string userDirectory = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
+
+                string currentDirectory = Path.Combine(userDirectory, "EndpointFinder");
+
+                string logsDirectory = Path.Combine(currentDirectory, "Records", "EndpointLogs");
 
                 Directory.CreateDirectory(logsDirectory);
 
@@ -163,23 +191,16 @@ public class HelperMethods : IHelperMethods
         }
     }
 
-    public string GetValidUrl()
+    public async Task<string> GetValidUrl(string inputUrl)
     {
-        string inputUrl;
-        do
+        if (!IsValidUrl(inputUrl))
         {
-            Console.WriteLine("Please enter the URL:");
-            inputUrl = Console.ReadLine();
-
-            if (!IsValidUrl(inputUrl))
-            {
-                Console.WriteLine("Incorrect URL format. Please try again.");
-            }
-            else if (!inputUrl.StartsWith("http://") && !inputUrl.StartsWith("https://"))
-            {
-                inputUrl = "https://" + inputUrl + "/";
-            }
-        } while (!IsValidUrl(inputUrl));
+            return "Enter Correct Url.";
+        }
+        else if (!inputUrl.StartsWith("http://") && !inputUrl.StartsWith("https://"))
+        {
+            inputUrl = "https://" + inputUrl + "/";
+        }
 
         return inputUrl;
     }

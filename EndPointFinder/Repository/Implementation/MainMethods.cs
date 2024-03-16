@@ -8,10 +8,11 @@ public class MainMethods : IMainMethods
     private readonly IEndpointFinder _endpointFinder = new EndpointFinder();
     private readonly IApiFinder _apiFinder = new ApiFinder();
 
-    public async Task ScanWebSiteForEnpoints(string url)
+    public async Task<List<string>> ScanWebSiteForEnpoints(string url)
     {
         var configData = await _helperMethods.LoadConfig();
         var endpoints = await _helperMethods.WordTrimmerFromTxt(configData.TextPath);
+        var results = new List<string>();
 
         Task<string> task1 = _endpointFinder.GetEndpointsWithoutApi(url, endpoints, configData.PerfectlyDivisorNum);
         Task<string> task2 = _endpointFinder.GetEndpointsWithApi(url, endpoints, configData.PerfectlyDivisorNum);
@@ -20,21 +21,28 @@ public class MainMethods : IMainMethods
 
         await Task.WhenAll(task1, task2, task3, task4);
 
-        Console.WriteLine($"Endpoints Without Anything: {task1.Result}");
-        Console.WriteLine($"Endpoints With Api: {task2.Result}");
-        Console.WriteLine($"Endpoints With S: {task3.Result}");
-        Console.WriteLine($"Endpoints With Api And S: {task4.Result}");
+        results.Add(task1.Result);
+        results.Add(task2.Result);
+        results.Add(task3.Result);
+        results.Add(task4.Result);
+
+        _helperMethods.WriteEndpointsToFile(task1.Result);
+        _helperMethods.WriteEndpointsToFile(task2.Result);
+        _helperMethods.WriteEndpointsToFile(task3.Result);
+        _helperMethods.WriteEndpointsToFile(task4.Result);
+
+        return results;
     }
 
-    public async Task ScanWebSiteForApis(string url)
+    public async Task<List<string>> ScanWebSiteForApis(string url)
     {
         try
         {
-            await _apiFinder.ScanAndFind(url);
+            return await _apiFinder.ScanAndFind(url);
         }
         catch (Exception ex)
         {
-            Console.WriteLine(ex.Message);
+            return new List<string> { ex.Message };
         }
     }
 }

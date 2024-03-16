@@ -2,7 +2,6 @@
 
 public interface IMainMethods
 {
-    Task ScanWebSiteForEnpoints(string url);
-
-    Task ScanWebSiteForApis(string url);
+    Task<List<string>> ScanWebSiteForEnpoints(string url);
+    Task<List<string>> ScanWebSiteForApis(string url);
 }
