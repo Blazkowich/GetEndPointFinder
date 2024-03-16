@@ -194,7 +194,7 @@ public class HelperMethods : IHelperMethods
             }
             else if (!inputUrl.StartsWith("http://") && !inputUrl.StartsWith("https://"))
             {
-                inputUrl = "https://" + inputUrl;
+                inputUrl = "https://" + inputUrl + "/";
             }
         } while (!IsValidUrl(inputUrl));
 
