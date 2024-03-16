@@ -12,12 +12,12 @@ public class ApiFinder : IApiFinder
 {
     private readonly IHelperMethods _helperMethods = new HelperMethods();
 
-    public async Task<List<string>> ScanAndFind(string urlToTest)
+    public async Task<HashSet<string>> ScanAndFind(string urlToTest)
     {
         ChromeOptions chromeOptions = new();
         chromeOptions.AddArguments("--headless");
         ChromeDriverService chromeDriverService = ChromeDriverService.CreateDefaultService(@"C:\Users\oilur\source\repos\EndPointFinder\EndPointFinder\Repository\Config\", "chromedriver.exe");
-        var results = new List<string>();
+        var results = new HashSet<string>();
 
         using IWebDriver driver = new ChromeDriver(chromeDriverService, chromeOptions);
         try
@@ -33,8 +33,12 @@ public class ApiFinder : IApiFinder
             {
                 if (Regex.IsMatch(e.Request.Url, @"\bapi\b"))
                 {
-                    string requestInfo = $"Api - {DateTime.Now} - Request URL: {e.Request.Url}, Initiator URL: {e.Initiator.Url}";
-                    _helperMethods.WriteToFile(requestInfo);
+                    string requestInfo = $"Api - Request URL: {e.Request.Url}, Initiator URL: {e.Initiator.Url}";
+                    if (!results.Contains(requestInfo))
+                    {
+                        _helperMethods.WriteToFile(requestInfo);
+                    }
+
                     results.Add(requestInfo);
                 }
             };
@@ -43,8 +47,13 @@ public class ApiFinder : IApiFinder
             {
                 if (Regex.IsMatch(e.Request.Url, @"\b(apiKey|key)\b"))
                 {
-                    string requestInfo = $"Key - {DateTime.Now} - Request URL: {e.Request.Url}, Initiator URL: {e.Initiator.Url}";
-                    _helperMethods.WriteApiKeyToFile(requestInfo);
+                    string requestInfo = $"Key - Request URL: {e.Request.Url}, Initiator URL: {e.Initiator.Url}";
+
+                    if (!results.Contains(requestInfo))
+                    {
+                        _helperMethods.WriteApiKeyToFile(requestInfo);
+                    }
+
                     results.Add(requestInfo);
                 }
             };
@@ -57,7 +66,7 @@ public class ApiFinder : IApiFinder
         }
         catch (Exception ex)
         {
-           return new List<string> { $"An error occurred: {ex.Message}" };
+            return [$"An error occurred: {ex.Message}"];
         }
     }
 

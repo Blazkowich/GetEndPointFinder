@@ -34,7 +34,7 @@ public class MainMethods : IMainMethods
         return results;
     }
 
-    public async Task<List<string>> ScanWebSiteForApis(string url)
+    public async Task<HashSet<string>> ScanWebSiteForApis(string url)
     {
         try
         {
@@ -42,7 +42,7 @@ public class MainMethods : IMainMethods
         }
         catch (Exception ex)
         {
-            return new List<string> { ex.Message };
+            return new HashSet<string> { ex.Message };
         }
     }
 }

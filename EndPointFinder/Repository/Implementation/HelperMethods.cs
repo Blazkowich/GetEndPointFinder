@@ -1,6 +1,5 @@
 ﻿using EndPointFinder.Repository.Configuration;
 using EndPointFinder.Repository.Interfaces;
-using System.Reflection;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 
@@ -9,7 +8,6 @@ namespace EndPointFinder.Repository.Implementation;
 public class HelperMethods : IHelperMethods
 {
     readonly object fileLock = new();
-    private static Config _config;
 
     public HelperMethods()
     {
@@ -117,7 +115,7 @@ public class HelperMethods : IHelperMethods
 
                 string currentDirectory = Path.Combine(userDirectory, "EndpointFinder");
 
-                string logsDirectory = Path.Combine(currentDirectory, "Records", "Endpoints");
+                string logsDirectory = Path.Combine(currentDirectory, "Records", "ApiEndpoints");
 
                 Directory.CreateDirectory(logsDirectory);
 
@@ -173,7 +171,7 @@ public class HelperMethods : IHelperMethods
 
                 string currentDirectory = Path.Combine(userDirectory, "EndpointFinder");
 
-                string logsDirectory = Path.Combine(currentDirectory, "Records", "ApiKeyLogs");
+                string logsDirectory = Path.Combine(currentDirectory, "Records", "KeyLogs");
 
                 Directory.CreateDirectory(logsDirectory);
 
@@ -191,7 +189,9 @@ public class HelperMethods : IHelperMethods
         }
     }
 
+#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
     public async Task<string> GetValidUrl(string inputUrl)
+#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
     {
         if (!IsValidUrl(inputUrl))
         {

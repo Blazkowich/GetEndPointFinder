@@ -3,5 +3,5 @@
 public interface IMainMethods
 {
     Task<List<string>> ScanWebSiteForEnpoints(string url);
-    Task<List<string>> ScanWebSiteForApis(string url);
+    Task<HashSet<string>> ScanWebSiteForApis(string url);
 }
