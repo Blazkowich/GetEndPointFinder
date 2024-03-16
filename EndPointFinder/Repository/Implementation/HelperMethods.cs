@@ -136,17 +136,13 @@ public class HelperMethods : IHelperMethods
         {
             try
             {
-                // Get the directory where the executable is located
                 string currentDirectory = AppDomain.CurrentDomain.BaseDirectory;
                 string logsDirectory = Path.Combine(currentDirectory, "Records", "NetworkLogs");
 
-                // Ensure that the directory exists, create it if it doesn't
                 Directory.CreateDirectory(logsDirectory);
 
-                // Create the file path with the current date and time
                 string filePath = Path.Combine(logsDirectory, $"network_requests_{DateTime.Now:yyyy-MM-dd-HH-mm}.txt");
 
-                // Write content to the file
                 using (StreamWriter writer = new StreamWriter(filePath, true))
                 {
                     writer.WriteLine(content);
@@ -165,17 +161,13 @@ public class HelperMethods : IHelperMethods
         {
             try
             {
-                // Get the directory where the executable is located
                 string currentDirectory = AppDomain.CurrentDomain.BaseDirectory;
                 string logsDirectory = Path.Combine(currentDirectory, "Records", "ApiKeyLogs");
 
-                // Ensure that the directory exists, create it if it doesn't
                 Directory.CreateDirectory(logsDirectory);
 
-                // Create the file path with the current date and time
                 string filePath = Path.Combine(logsDirectory, $"ApiKey_requests_{DateTime.Now:yyyy-MM-dd-HH-mm}.txt");
 
-                // Write content to the file
                 using (StreamWriter writer = new StreamWriter(filePath, true))
                 {
                     writer.WriteLine(content);
