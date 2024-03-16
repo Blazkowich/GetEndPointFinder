@@ -16,7 +16,9 @@ public class ApiFinder : IApiFinder
     {
         ChromeOptions chromeOptions = new();
         chromeOptions.AddArguments("--headless");
-        ChromeDriverService chromeDriverService = ChromeDriverService.CreateDefaultService(@"C:\Users\oilur\source\repos\EndPointFinder\EndPointFinder\Repository\Config\", "chromedriver.exe");
+        string baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
+        string filePath = Path.Combine(baseDirectory, "..", "..", "..", "..", "EndpointFinder", "Repository", "Config");
+        ChromeDriverService chromeDriverService = ChromeDriverService.CreateDefaultService(filePath, "chromedriver.exe");
         var results = new HashSet<string>();
 
         using IWebDriver driver = new ChromeDriver(chromeDriverService, chromeOptions);
