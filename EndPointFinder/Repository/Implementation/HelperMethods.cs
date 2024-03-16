@@ -1,5 +1,6 @@
 ﻿using EndPointFinder.Repository.Configuration;
 using EndPointFinder.Repository.Interfaces;
+using System.Reflection;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 
@@ -95,7 +96,14 @@ public class HelperMethods : IHelperMethods
 
     public async Task<Config> LoadConfig()
     {
-        string json = await File.ReadAllTextAsync(@"C:\Users\oilur\source\repos\EndPointFinder\EndPointFinder\Repository\Config\Config.json");
+        string baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
+
+        string jsonFilePath = Path.Combine(baseDirectory, "..", "..", "..", "Repository", "Config", "Config.json");
+
+        jsonFilePath = Path.GetFullPath(jsonFilePath);
+
+        string json = await File.ReadAllTextAsync(jsonFilePath);
+
         return JsonSerializer.Deserialize<Config>(json);
     }
 
