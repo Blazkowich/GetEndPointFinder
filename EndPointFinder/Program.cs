@@ -1,29 +1,47 @@
 ﻿using EndPointFinder.Repository.UnitOfWork;
 
-namespace EndPointFinder;
-
-public class Program
+namespace EndPointFinder
 {
-    private static readonly IUnitOfWork _unitOfWork = new UnitOfWork();
-
-    static async Task Main(string[] args)
+    public class Program
     {
-        var url = @"https://catalog-api.orinabiji.ge/catalog/";
+        private static readonly IUnitOfWork _unitOfWork = new UnitOfWork();
 
-        var configData = await _unitOfWork.HelperMethods.LoadConfig();
+        static async Task Main(string[] args)
+        {
+            do
+            {
+                Console.WriteLine("Please Enter Number Between 1 - 9:");
+                Console.WriteLine("1. Scan Web Site For Find Endpoints");
+                Console.WriteLine();
+                Console.WriteLine("2. Scan Web Site For Find Api's");
+                Console.WriteLine();
+                Console.WriteLine("3. Exit");
+                Console.WriteLine();
 
-        var endpoints = await _unitOfWork.HelperMethods.WordTrimmerFromTxt(configData.TextPath);
+                int input;
+                if (!int.TryParse(Console.ReadLine(), out input))
+                {
+                    Console.WriteLine("Invalid Input. Please enter an integer.");
+                    continue;
+                }
 
-        Task<string> task1 = _unitOfWork.EndpointFinder.GetEndpointsWithoutApi(url, endpoints, configData.PerfectlyDivisorNum);
-        Task<string> task2 = _unitOfWork.EndpointFinder.GetEndpointsWithApi(url, endpoints, configData.PerfectlyDivisorNum);
-        Task<string> task3 = _unitOfWork.EndpointFinder.GetEndpointsWithS(url, endpoints, configData.PerfectlyDivisorNum);
-        Task<string> task4 = _unitOfWork.EndpointFinder.GetEndpointsWithApiAndS(url, endpoints, configData.PerfectlyDivisorNum);
+                switch (input)
+                {
+                    case 1:
+                        await _unitOfWork.MainMethods.ScanWebSiteForEnpoints(_unitOfWork.HelperMethods.GetValidUrl());
+                        break;
+                    case 2:
+                        _unitOfWork.MainMethods.ScanWebSiteForApis(_unitOfWork.HelperMethods.GetValidUrl());
+                        break;
+                    case 3:
+                        Console.WriteLine("Exiting...");
+                        return;
 
-        await Task.WhenAll(task1, task2, task3, task4);
-
-        Console.WriteLine($"Endpoints Without Anything: {task1.Result}");
-        Console.WriteLine($"Endpoints With Api: {task2.Result}");
-        Console.WriteLine($"Endpoints With S: {task3.Result}");
-        Console.WriteLine($"Endpoints With Api And S: {task4.Result}");
+                    default:
+                        Console.WriteLine("Invalid input. Please try again.");
+                        break;
+                }
+            } while (true);
+        }
     }
 }

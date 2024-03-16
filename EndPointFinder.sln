@@ -5,8 +5,6 @@ VisualStudioVersion = 17.9.34701.34
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EndPointFinder", "EndPointFinder\EndPointFinder.csproj", "{933AF6B5-2D02-45F9-826A-C07008B8BE08}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiFinder", "ApiFinder\ApiFinder.csproj", "{90DE17E7-31B0-4C39-A254-DE7F9DBA25C0}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{9A42D984-ED48-407B-B97D-D737169FA57B}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
@@ -22,10 +20,6 @@ Global
 		{933AF6B5-2D02-45F9-826A-C07008B8BE08}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{933AF6B5-2D02-45F9-826A-C07008B8BE08}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{933AF6B5-2D02-45F9-826A-C07008B8BE08}.Release|Any CPU.Build.0 = Release|Any CPU
-		{90DE17E7-31B0-4C39-A254-DE7F9DBA25C0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{90DE17E7-31B0-4C39-A254-DE7F9DBA25C0}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{90DE17E7-31B0-4C39-A254-DE7F9DBA25C0}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{90DE17E7-31B0-4C39-A254-DE7F9DBA25C0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

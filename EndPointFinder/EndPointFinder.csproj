@@ -9,10 +9,14 @@
 
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="Selenium.WebDriver" Version="4.18.1" />
+    <PackageReference Include="WebDriverManager" Version="2.17.2" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="Data\OutputData\" />
+    <Folder Include="Records\ApiKeyLogs\" />
+    <Folder Include="Records\NetworkLogs\" />
   </ItemGroup>
 
 </Project>

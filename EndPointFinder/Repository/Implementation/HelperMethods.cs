@@ -1,11 +1,13 @@
 ﻿using EndPointFinder.Repository.Configuration;
 using EndPointFinder.Repository.Interfaces;
 using System.Text.Json;
+using System.Text.RegularExpressions;
 
 namespace EndPointFinder.Repository.Implementation;
 
 public class HelperMethods : IHelperMethods
 {
+    readonly object fileLock = new();
     private static Config _config;
 
     public HelperMethods()
@@ -95,5 +97,121 @@ public class HelperMethods : IHelperMethods
     {
         string json = await File.ReadAllTextAsync(@"C:\Users\oilur\source\repos\EndPointFinder\EndPointFinder\Repository\Config\Config.json");
         return JsonSerializer.Deserialize<Config>(json);
+    }
+
+    //public void WriteToFile(string content)
+    //{
+    //    lock (fileLock)
+    //    {
+    //        try
+    //        {
+    //            using StreamWriter writer = new StreamWriter(@"C:\Users\oilur\source\repos\EndPointFinder\EndPointFinder\Records\NetworkLogs\" + $"network_requests_{DateTime.Now:yyyy-MM-dd-HH-mm}.txt", true);
+    //            writer.WriteLine(content);
+    //        }
+    //        catch (Exception ex)
+    //        {
+    //            Console.WriteLine($"An error occurred while writing to the file: {ex.Message}");
+    //        }
+    //    }
+    //}
+
+    //public void WriteApiKeyToFile(string content)
+    //{
+    //    lock (fileLock)
+    //    {
+    //        try
+    //        {
+    //            using StreamWriter writer = new StreamWriter(@"C:\Users\oilur\source\repos\EndPointFinder\EndPointFinder\Records\ApiKeyLogs\" + $"ApiKey_requests_{DateTime.Now:yyyy-MM-dd-HH-mm}.txt", true);
+    //            writer.WriteLine(content);
+    //        }
+    //        catch (Exception ex)
+    //        {
+    //            Console.WriteLine($"An error occurred while writing to the file: {ex.Message}");
+    //        }
+    //    }
+    //}
+    public void WriteToFile(string content)
+    {
+        lock (fileLock)
+        {
+            try
+            {
+                // Get the directory where the executable is located
+                string currentDirectory = AppDomain.CurrentDomain.BaseDirectory;
+                string logsDirectory = Path.Combine(currentDirectory, "Records", "NetworkLogs");
+
+                // Ensure that the directory exists, create it if it doesn't
+                Directory.CreateDirectory(logsDirectory);
+
+                // Create the file path with the current date and time
+                string filePath = Path.Combine(logsDirectory, $"network_requests_{DateTime.Now:yyyy-MM-dd-HH-mm}.txt");
+
+                // Write content to the file
+                using (StreamWriter writer = new StreamWriter(filePath, true))
+                {
+                    writer.WriteLine(content);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred while writing to the file: {ex.Message}");
+            }
+        }
+    }
+
+    public void WriteApiKeyToFile(string content)
+    {
+        lock (fileLock)
+        {
+            try
+            {
+                // Get the directory where the executable is located
+                string currentDirectory = AppDomain.CurrentDomain.BaseDirectory;
+                string logsDirectory = Path.Combine(currentDirectory, "Records", "ApiKeyLogs");
+
+                // Ensure that the directory exists, create it if it doesn't
+                Directory.CreateDirectory(logsDirectory);
+
+                // Create the file path with the current date and time
+                string filePath = Path.Combine(logsDirectory, $"ApiKey_requests_{DateTime.Now:yyyy-MM-dd-HH-mm}.txt");
+
+                // Write content to the file
+                using (StreamWriter writer = new StreamWriter(filePath, true))
+                {
+                    writer.WriteLine(content);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred while writing to the file: {ex.Message}");
+            }
+        }
+    }
+
+    public string GetValidUrl()
+    {
+        string inputUrl;
+        do
+        {
+            Console.WriteLine("Please enter the URL:");
+            inputUrl = Console.ReadLine();
+
+            if (!IsValidUrl(inputUrl))
+            {
+                Console.WriteLine("Incorrect URL format. Please try again.");
+            }
+            else if (!inputUrl.StartsWith("http://") && !inputUrl.StartsWith("https://"))
+            {
+                inputUrl = "https://" + inputUrl;
+            }
+        } while (!IsValidUrl(inputUrl));
+
+        return inputUrl;
+    }
+
+    public bool IsValidUrl(string url)
+    {
+        string pattern = @"^(http(s)?://)?([\w-]+\.)+[\w-]+(/[\w- ;,./?%&=]*)?$";
+        return Regex.IsMatch(url, pattern);
     }
 }

@@ -13,4 +13,12 @@ public interface IHelperMethods
     List<int> PerfectDividerNumberFinder(int numberForDivide);
 
     Task<Config> LoadConfig();
+
+    void WriteToFile(string content);
+
+    void WriteApiKeyToFile(string content);
+
+    string GetValidUrl();
+
+    bool IsValidUrl(string url);
 }

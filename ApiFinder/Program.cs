@@ -48,9 +48,9 @@ namespace ApiFinder
                     }
                 };
 
-                NetworkInterceptionTest(devToolsSession, driver);
-                SetAdditionalHeadersTest(devToolsSession, driver);
-                SetUserAgentTest(devToolsSession, driver);
+                //NetworkInterceptionTest(devToolsSession, driver);
+                //SetAdditionalHeadersTest(devToolsSession, driver);
+                //SetUserAgentTest(devToolsSession, driver);
             }
             catch (Exception ex)
             {
@@ -58,9 +58,9 @@ namespace ApiFinder
             }
         }
 
-        static void NetworkInterceptionTest(DevToolsSessionDomains devToolsSession, IWebDriver driver)
+        static async Task NetworkInterceptionTest(DevToolsSessionDomains devToolsSession, IWebDriver driver)
         {
-            devToolsSession.Network.SetBlockedURLs(new Network.SetBlockedURLsCommandSettings()
+            await devToolsSession.Network.SetBlockedURLs(new Network.SetBlockedURLsCommandSettings()
             {
                 Urls = ["*://*/*.css", "*://*/*.jpg", "*://*/*.png"]
             });
@@ -68,11 +68,11 @@ namespace ApiFinder
             driver.Navigate().GoToUrl(urlToTest);
         }
 
-        static void SetAdditionalHeadersTest(DevToolsSessionDomains devToolsSession, IWebDriver driver)
+        static async Task SetAdditionalHeadersTest(DevToolsSessionDomains devToolsSession, IWebDriver driver)
         {
             var extraHeader = new Network.Headers();
             extraHeader.Add("headerName", "executeHacked");
-            devToolsSession.Network.SetExtraHTTPHeaders(new Network.SetExtraHTTPHeadersCommandSettings()
+            await devToolsSession.Network.SetExtraHTTPHeaders(new Network.SetExtraHTTPHeadersCommandSettings()
             {
                 Headers = extraHeader
             });
@@ -80,9 +80,9 @@ namespace ApiFinder
             driver.Navigate().GoToUrl(urlToTest);
         }
 
-        static void SetUserAgentTest(DevToolsSessionDomains devToolsSession, IWebDriver driver)
+        static async Task SetUserAgentTest(DevToolsSessionDomains devToolsSession, IWebDriver driver)
         {
-            devToolsSession.Network.SetUserAgentOverride(new Network.SetUserAgentOverrideCommandSettings()
+            await devToolsSession.Network.SetUserAgentOverride(new Network.SetUserAgentOverrideCommandSettings()
             {
                 UserAgent = "Mozilla/5.0 (iPhone; CPU iPhone OS 12_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko)"
             });
