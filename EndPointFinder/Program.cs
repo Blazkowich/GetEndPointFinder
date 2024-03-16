@@ -1,10 +1,12 @@
-﻿using EndPointFinder.Repository.UnitOfWork;
+﻿using EndPointFinder.Repository.Implementation;
+using EndPointFinder.Repository.Interfaces;
 
 namespace EndPointFinder
 {
     public class Program
     {
-        private static readonly IUnitOfWork _unitOfWork = new UnitOfWork();
+        private static readonly IMainMethods _mainMethods = new MainMethods();
+        private static readonly IHelperMethods _helperMethods = new HelperMethods();
 
         static async Task Main(string[] args)
         {
@@ -28,10 +30,10 @@ namespace EndPointFinder
                 switch (input)
                 {
                     case 1:
-                        await _unitOfWork.MainMethods.ScanWebSiteForEnpoints(_unitOfWork.HelperMethods.GetValidUrl());
+                        await _mainMethods.ScanWebSiteForEnpoints(_helperMethods.GetValidUrl());
                         break;
                     case 2:
-                        _unitOfWork.MainMethods.ScanWebSiteForApis(_unitOfWork.HelperMethods.GetValidUrl());
+                        await _mainMethods.ScanWebSiteForApis(_helperMethods.GetValidUrl());
                         break;
                     case 3:
                         Console.WriteLine("Exiting...");
