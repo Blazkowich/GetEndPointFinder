@@ -7,6 +7,8 @@ public interface IHelperMethods
 {
     Task<List<string>> WordTrimmerFromTxt(string textPath);
 
+    Task<List<string>> WordTrimmerFromJson(string dictionaryPath);
+
     void IncrementCompletedTasks(ref int completedTasks, int totalTasks);
 
     int CountWordsInFile(string filePath);

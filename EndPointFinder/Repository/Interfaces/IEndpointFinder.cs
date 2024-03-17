@@ -6,13 +6,13 @@ public interface IEndpointFinder
 {
     Task<EndpointScanerRootModels> MergedEndpointScanner(string url);
 
-    Task<EndpointScanerRootModels> GetEndpointsWithApiAndS(string url, List<string> endpoints, int perfectlyDivisorNum);
+    Task<EndpointScanerRootModels> GetEndpointsWithApiAndS(string url);
 
-    Task<EndpointScanerRootModels> GetEndpointsWithApi(string url, List<string> endpoints, int perfectlyDivisorNum);
+    Task<EndpointScanerRootModels> GetEndpointsWithApi(string url);
 
-    Task<EndpointScanerRootModels> GetEndpointsWithoutApi(string url, List<string> endpoints, int perfectlyDivisorNum);
+    Task<EndpointScanerRootModels> GetEndpointsWithoutApi(string url);
 
-    Task<EndpointScanerRootModels> GetEndpointsWithS(string url, List<string> endpoints, int perfectlyDivisorNum);
+    Task<EndpointScanerRootModels> GetEndpointsWithS(string url);
 
     Task<IEnumerable<EndpointScanerRootModels>> GetAllEndpoints();
 }

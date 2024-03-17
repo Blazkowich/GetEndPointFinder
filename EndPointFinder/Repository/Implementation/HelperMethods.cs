@@ -1,7 +1,7 @@
 ﻿using EndPointFinder.Models.UrlModel;
 using EndPointFinder.Repository.Configuration;
 using EndPointFinder.Repository.Interfaces;
-using System.Text.Json;
+using Newtonsoft.Json;
 using System.Text.RegularExpressions;
 
 namespace EndPointFinder.Repository.Implementation;
@@ -44,6 +44,37 @@ public class HelperMethods : IHelperMethods
         {
             Console.WriteLine(ex.Message);
             return [];
+        }
+    }
+
+    public async Task<List<string>> WordTrimmerFromJson(string dictionaryPath)
+    {
+        try
+        {
+            var endpoints = new List<string>();
+
+            string jsonContent = await File.ReadAllTextAsync(dictionaryPath);
+
+            var wordDictionary = JsonConvert.DeserializeObject<Dictionary<string, List<string>>>(jsonContent);
+
+            foreach (var kvp in wordDictionary)
+            {
+                foreach (var word in kvp.Value)
+                {
+                    string trimmedWord = word.Trim();
+                    if (!string.IsNullOrWhiteSpace(trimmedWord) && !endpoints.Contains(trimmedWord))
+                    {
+                        endpoints.Add(trimmedWord);
+                    }
+                }
+            }
+
+            return endpoints;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+            return new List<string>();
         }
     }
 
@@ -103,7 +134,7 @@ public class HelperMethods : IHelperMethods
 
         string json = await File.ReadAllTextAsync(jsonFilePath);
 
-        return JsonSerializer.Deserialize<Config>(json);
+        return System.Text.Json.JsonSerializer.Deserialize<Config>(json);
     }
 
     public void WriteToFile(string content)
@@ -216,6 +247,6 @@ public class HelperMethods : IHelperMethods
         var domains = await WordTrimmerFromTxt(configData.DomainPath);
 
         string pattern = @"^(http(s)?://)?([\w-]+\.)+[\w-]+(/[\w- ;,./?%&=]*)?$";
-        return Regex.IsMatch(url, pattern) && domains.Any(domain => url.EndsWith(domain));
+        return Regex.IsMatch(url, pattern) && domains.Any(url.EndsWith);
     }
 }

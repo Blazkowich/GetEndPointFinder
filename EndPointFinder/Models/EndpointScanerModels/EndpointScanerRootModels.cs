@@ -8,6 +8,7 @@ public class EndpointScanerRootModels
 {
     [BsonId]
     [BsonRepresentation(BsonType.ObjectId)]
+    [JsonProperty("id")]
     public string Id { get; set; }
 
     [JsonProperty("Endpoint")]

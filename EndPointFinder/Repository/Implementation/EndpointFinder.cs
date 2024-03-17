@@ -23,7 +23,7 @@ public class EndpointFinder : IEndpointFinder
         try
         {
             var configData = await _helperMethods.LoadConfig();
-            var endpoints = await _helperMethods.WordTrimmerFromTxt(configData.TextPath);
+            var endpoints = await _helperMethods.WordTrimmerFromJson(configData.TextPath);
 
             var results = new EndpointScanerRootModels
             {
@@ -31,10 +31,10 @@ public class EndpointFinder : IEndpointFinder
                 Messages = new List<string>(),
             };
 
-            Task<EndpointScanerRootModels> task1 = GetEndpointsWithoutApi(url, endpoints, configData.PerfectlyDivisorNum);
-            Task<EndpointScanerRootModels> task2 = GetEndpointsWithApi(url, endpoints, configData.PerfectlyDivisorNum);
-            Task<EndpointScanerRootModels> task3 = GetEndpointsWithS(url, endpoints, configData.PerfectlyDivisorNum);
-            Task<EndpointScanerRootModels> task4 = GetEndpointsWithApiAndS(url, endpoints, configData.PerfectlyDivisorNum);
+            Task<EndpointScanerRootModels> task1 = GetEndpointsWithoutApi(url);
+            Task<EndpointScanerRootModels> task2 = GetEndpointsWithApi(url);
+            Task<EndpointScanerRootModels> task3 = GetEndpointsWithS(url);
+            Task<EndpointScanerRootModels> task4 = GetEndpointsWithApiAndS(url);
 
             await Task.WhenAll(task1, task2, task3, task4);
 
@@ -49,6 +49,7 @@ public class EndpointFinder : IEndpointFinder
             results.Messages.AddRange(task4.Result.Messages);
 
             await _endpointscan.InsertOneAsync(results);
+
             return results;
         }
         catch (Exception ex)
@@ -57,8 +58,11 @@ public class EndpointFinder : IEndpointFinder
         }
     }
 
-    public async Task<EndpointScanerRootModels> GetEndpointsWithApiAndS(string url, List<string> endpoints, int perfectlyDivisorNum)
+    public async Task<EndpointScanerRootModels> GetEndpointsWithApiAndS(string url)
     {
+        var configData = await _helperMethods.LoadConfig();
+        var endpoints = await _helperMethods.WordTrimmerFromJson(configData.TextPath);
+
         try
         {
             var successfulEndpoints = new HashSet<string>();
@@ -74,7 +78,7 @@ public class EndpointFinder : IEndpointFinder
             using var httpClient = new HttpClient();
 
             var batches = endpoints.Select((endpoint, index) => new { endpoint, index })
-                                   .GroupBy(x => x.index / perfectlyDivisorNum)
+                                   .GroupBy(x => x.index / configData.PerfectlyDivisorNum)
                                    .Select(group => group.Select(x => x.endpoint).ToList())
                                    .ToList();
 
@@ -115,6 +119,8 @@ public class EndpointFinder : IEndpointFinder
                 await Task.WhenAll(tasks);
             }
 
+            await _endpointscan.InsertOneAsync(results);
+
             results.Messages.Add($"Found Url With Api and S : {successfulEndpoints.Count}");
 
             return results;
@@ -125,10 +131,13 @@ public class EndpointFinder : IEndpointFinder
         }
     }
 
-    public async Task<EndpointScanerRootModels> GetEndpointsWithApi(string url, List<string> endpoints, int perfectlyDivisorNum)
+    public async Task<EndpointScanerRootModels> GetEndpointsWithApi(string url)
     {
         try
         {
+            var configData = await _helperMethods.LoadConfig();
+            var endpoints = await _helperMethods.WordTrimmerFromJson(configData.TextPath);
+
             var successfulEndpoints = new HashSet<string>();
 
             var results = new EndpointScanerRootModels
@@ -142,7 +151,7 @@ public class EndpointFinder : IEndpointFinder
             using var httpClient = new HttpClient();
 
             var batches = endpoints.Select((endpoint, index) => new { endpoint, index })
-                .GroupBy(x => x.index / perfectlyDivisorNum)
+                .GroupBy(x => x.index / configData.PerfectlyDivisorNum)
                 .Select(group => group.Select(x => x.endpoint).ToList())
                 .ToList();
 
@@ -185,6 +194,8 @@ public class EndpointFinder : IEndpointFinder
 
             results.Messages.Add($"Found Url with Api: {successfulEndpoints.Count}");
 
+            await _endpointscan.InsertOneAsync(results);
+
             return results;
         }
         catch (Exception ex)
@@ -193,10 +204,13 @@ public class EndpointFinder : IEndpointFinder
         }
     }
 
-    public async Task<EndpointScanerRootModels> GetEndpointsWithoutApi(string url, List<string> endpoints, int perfectlyDivisorNum)
+    public async Task<EndpointScanerRootModels> GetEndpointsWithoutApi(string url)
     {
         try
         {
+            var configData = await _helperMethods.LoadConfig();
+            var endpoints = await _helperMethods.WordTrimmerFromJson(configData.TextPath);
+
             var successfulEndpoints = new HashSet<string>();
 
             var results = new EndpointScanerRootModels
@@ -210,7 +224,7 @@ public class EndpointFinder : IEndpointFinder
             using var httpClient = new HttpClient();
 
             var batches = endpoints.Select((endpoint, index) => new { endpoint, index })
-                   .GroupBy(x => x.index / perfectlyDivisorNum)
+                   .GroupBy(x => x.index / configData.PerfectlyDivisorNum)
                    .Select(group => group.Select(x => x.endpoint).ToList())
                    .ToList();
 
@@ -250,6 +264,8 @@ public class EndpointFinder : IEndpointFinder
 
                 await Task.WhenAll(tasks);
             }
+            
+            await _endpointscan.InsertOneAsync(results);
 
             results.Messages.Add($"Found Clean Url: {successfulEndpoints.Count}");
 
@@ -261,10 +277,13 @@ public class EndpointFinder : IEndpointFinder
         }
     }
 
-    public async Task<EndpointScanerRootModels> GetEndpointsWithS(string url, List<string> endpoints, int perfectlyDivisorNum)
+    public async Task<EndpointScanerRootModels> GetEndpointsWithS(string url)
     {
         try
         {
+            var configData = await _helperMethods.LoadConfig();
+            var endpoints = await _helperMethods.WordTrimmerFromJson(configData.TextPath);
+
             var successfulEndpoints = new HashSet<string>();
 
             var results = new EndpointScanerRootModels
@@ -277,7 +296,7 @@ public class EndpointFinder : IEndpointFinder
 
             using var httpClient = new HttpClient();
             var batches = endpoints.Select((endpoint, index) => new { endpoint, index })
-                .GroupBy(x => x.index / perfectlyDivisorNum)
+                .GroupBy(x => x.index / configData.PerfectlyDivisorNum)
                 .Select(group => group.Select(x => x.endpoint).ToList())
                 .ToList();
 
@@ -318,6 +337,8 @@ public class EndpointFinder : IEndpointFinder
 
                 await Task.WhenAll(tasks);
             }
+
+            await _endpointscan.InsertOneAsync(results);
 
             results.Messages.Add($"Found Url With S : {successfulEndpoints.Count}");
 
