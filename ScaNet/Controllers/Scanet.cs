@@ -15,7 +15,21 @@ namespace ScaNet.Controllers
             _helperMethods = helperMethods;
         }
 
-        [HttpPost("scanet/sfa/{url}")]
+        [HttpGet("getApis")]
+        public async Task<IActionResult> GetAllApis()
+        {
+            var result = await _mainMethods.GetAllApis();
+            return Ok(result);
+        }
+
+        [HttpGet("getEndpoints")]
+        public async Task<IActionResult> GetAllEndpoints()
+        {
+            var result = await _mainMethods.GetAllEndpoints();
+            return Ok(result);
+        }
+
+        [HttpPost("scanet/scanApis/{url}")]
         public async Task<IActionResult> ScanForApi(string url)
         {
             var validUrl = await _helperMethods.GetValidUrl(url);
@@ -30,7 +44,7 @@ namespace ScaNet.Controllers
             return Ok(result);
         }
 
-        [HttpPost("scanet/sfe/{url}")]
+        [HttpPost("scanet/scanEndpoints/{url}")]
         public async Task<IActionResult> ScanForEndpoints(string url)
         {
             var validUrl = await _helperMethods.GetValidUrl(url);

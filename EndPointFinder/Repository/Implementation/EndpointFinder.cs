@@ -328,4 +328,9 @@ public class EndpointFinder : IEndpointFinder
             return new EndpointScanerRootModels { Messages = new List<string> { $"An error occurred: {ex.Message}" } };
         }
     }
+
+    public async Task<IEnumerable<EndpointScanerRootModels>> GetAllEndpoints()
+    {
+        return await _endpointscan.Find(e => true).ToListAsync();
+    }
 }

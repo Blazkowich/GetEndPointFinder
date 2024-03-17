@@ -6,5 +6,10 @@ namespace EndPointFinder.Repository.Interfaces;
 public interface IMainMethods
 {
     Task<EndpointScanerRootModels> ScanWebSiteForEnpoints(string url);
+
     Task<ApiScanerRootModels> ScanWebSiteForApis(string url);
+
+    Task<IEnumerable<ApiScanerRootModels>> GetAllApis();
+
+    Task<IEnumerable<EndpointScanerRootModels>> GetAllEndpoints();
 }

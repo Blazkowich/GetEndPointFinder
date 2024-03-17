@@ -13,4 +13,6 @@ public interface IApiFinder
     Task SetAdditionalHeadersTest(string urlToTest, DevToolsSessionDomains devToolsSession, IWebDriver driver);
 
     Task SetUserAgentTest(string urlToTest, DevToolsSessionDomains devToolsSession, IWebDriver driver);
+
+    Task<IEnumerable<ApiScanerRootModels>> GetAllApis();
 }

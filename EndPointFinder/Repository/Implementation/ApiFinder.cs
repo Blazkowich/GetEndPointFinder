@@ -6,9 +6,6 @@ using Network = OpenQA.Selenium.DevTools.V122.Network;
 using System.Text.RegularExpressions;
 using EndPointFinder.Repository.Interfaces;
 using EndPointFinder.Models.ApiScanerModels;
-using EndPointFinder.Data.Context.Settings;
-using EndPointFinder.Models.EndpointScanerModels;
-using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 
 namespace EndPointFinder.Repository.Implementation;
@@ -22,6 +19,11 @@ public class ApiFinder : IApiFinder
     {
         _apiscan = apiscan;
         _helperMethods = helperMethods;
+    }
+
+    public async Task<IEnumerable<ApiScanerRootModels>> GetAllApis()
+    {
+        return await _apiscan.Find(e => true).ToListAsync();
     }
 
     public async Task<ApiScanerRootModels> ScanAndFind(string urlToTest)

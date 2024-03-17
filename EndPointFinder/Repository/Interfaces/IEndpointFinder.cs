@@ -13,4 +13,6 @@ public interface IEndpointFinder
     Task<EndpointScanerRootModels> GetEndpointsWithoutApi(string url, List<string> endpoints, int perfectlyDivisorNum);
 
     Task<EndpointScanerRootModels> GetEndpointsWithS(string url, List<string> endpoints, int perfectlyDivisorNum);
+
+    Task<IEnumerable<EndpointScanerRootModels>> GetAllEndpoints();
 }

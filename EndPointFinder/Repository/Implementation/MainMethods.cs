@@ -15,9 +15,19 @@ public class MainMethods : IMainMethods
         _apiFinder = apiFinder;
     }
 
+    public async Task<IEnumerable<EndpointScanerRootModels>> GetAllEndpoints()
+    {
+        return await _endpointFinder.GetAllEndpoints();
+    }
+
     public async Task<EndpointScanerRootModels> ScanWebSiteForEnpoints(string url)
     {
         return await _endpointFinder.MergedEndpointScanner(url);
+    }
+
+    public async Task<IEnumerable<ApiScanerRootModels>> GetAllApis()
+    {
+        return await _apiFinder.GetAllApis();
     }
 
     public async Task<ApiScanerRootModels> ScanWebSiteForApis(string url)
