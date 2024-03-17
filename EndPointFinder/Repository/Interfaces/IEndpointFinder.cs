@@ -1,12 +1,14 @@
-﻿namespace EndPointFinder.Repository.Interfaces;
+﻿using EndPointFinder.Models.EndpointScanerModels;
+
+namespace EndPointFinder.Repository.Interfaces;
 
 public interface IEndpointFinder
 {
-    Task<string> GetEndpointsWithApiAndS(string url, List<string> endpoints, int perfectlyDivisorNum);
+    Task<EndpointScanerRootModels> GetEndpointsWithApiAndS(string url, List<string> endpoints, int perfectlyDivisorNum);
 
-    Task<string> GetEndpointsWithApi(string url, List<string> endpoints, int perfectlyDivisorNum);
+    Task<EndpointScanerRootModels> GetEndpointsWithApi(string url, List<string> endpoints, int perfectlyDivisorNum);
 
-    Task<string> GetEndpointsWithoutApi(string url, List<string> endpoints, int perfectlyDivisorNum);
+    Task<EndpointScanerRootModels> GetEndpointsWithoutApi(string url, List<string> endpoints, int perfectlyDivisorNum);
 
-    Task<string> GetEndpointsWithS(string url, List<string> endpoints, int perfectlyDivisorNum);
+    Task<EndpointScanerRootModels> GetEndpointsWithS(string url, List<string> endpoints, int perfectlyDivisorNum);
 }

@@ -1,6 +1,7 @@
-﻿using EndPointFinder.Repository.Interfaces;
+﻿using EndPointFinder.Models.EndpointScanerModels;
+using EndPointFinder.Repository.Interfaces;
+using System.Linq;
 using System.Net;
-using System.Text;
 
 namespace EndPointFinder.Repository.Implementation;
 
@@ -8,11 +9,19 @@ public class EndpointFinder : IEndpointFinder
 {
     private readonly IHelperMethods _helperMethods = new HelperMethods();
 
-    public async Task<string> GetEndpointsWithApiAndS(string url, List<string> endpoints, int perfectlyDivisorNum)
+    public async Task<EndpointScanerRootModels> GetEndpointsWithApiAndS(string url, List<string> endpoints, int perfectlyDivisorNum)
     {
         try
         {
-            var successfulEndpoints = new StringBuilder();
+            var successfulEndpoints = new HashSet<string>();
+
+            var results = new EndpointScanerRootModels
+            {
+                Endpoints = new HashSet<EndpointModels>(),
+                Messages = new List<string>(),
+            };
+
+            object uniqueResultsLock = new object();
 
             using var httpClient = new HttpClient();
 
@@ -30,13 +39,26 @@ public class EndpointFinder : IEndpointFinder
                 {
                     var link = url + "api/" + endpoint + "s/";
 
-                    var response = await httpClient.GetAsync("api/" + endpoint + "s/");
+                    var response = await httpClient.GetAsync(link);
 
                     if (response.StatusCode == HttpStatusCode.OK || response.StatusCode == HttpStatusCode.Accepted)
                     {
-                        successfulEndpoints.Append("With Api And S :");
-                        successfulEndpoints.AppendLine(url + endpoint + "s");
-                        successfulEndpoints.AppendLine();
+                        lock (uniqueResultsLock)
+                        {
+                            if (!successfulEndpoints.Contains(link))
+                            {
+                                var endpointModel = new EndpointModels
+                                {
+                                    Type = "Api And S",
+                                    Endpoint = link,
+                                    Message = "Found",
+                                    Amount = successfulEndpoints.Count + 1,
+                                };
+
+                                results.Endpoints.Add(endpointModel);
+                                successfulEndpoints.Add(link);
+                            }
+                        }
                     }
 
                     _helperMethods.IncrementCompletedTasks(ref completedTasks, totalTasks);
@@ -45,23 +67,29 @@ public class EndpointFinder : IEndpointFinder
                 await Task.WhenAll(tasks);
             }
 
-            var result = new StringBuilder();
-            result.AppendLine("Successful Endpoints With Api And S:");
-            result.AppendLine(successfulEndpoints.ToString());
+            results.Messages.Add($"Found Url With Api and S : {successfulEndpoints.Count}");
 
-            return result.ToString();
+            return results;
         }
         catch (Exception ex)
         {
-            return $"An error occurred: {ex.Message}";
+            return new EndpointScanerRootModels { Messages = new List<string> { $"An error occurred: {ex.Message}" } };
         }
     }
 
-    public async Task<string> GetEndpointsWithApi(string url, List<string> endpoints, int perfectlyDivisorNum)
+    public async Task<EndpointScanerRootModels> GetEndpointsWithApi(string url, List<string> endpoints, int perfectlyDivisorNum)
     {
         try
         {
-            var successfulEndpoints = new StringBuilder();
+            var successfulEndpoints = new HashSet<string>();
+
+            var results = new EndpointScanerRootModels
+            {
+                Endpoints = new HashSet<EndpointModels>(),
+                Messages = new List<string>(),
+            };
+
+            object uniqueResultsLock = new object();
 
             using var httpClient = new HttpClient();
 
@@ -77,12 +105,27 @@ public class EndpointFinder : IEndpointFinder
             {
                 var tasks = batch.Select(async endpoint =>
                 {
-                    var response = await httpClient.GetAsync(url + "api/" + endpoint);
+                    var link = url + "api/" + endpoint;
+
+                    var response = await httpClient.GetAsync(link);
                     if (response.StatusCode == HttpStatusCode.OK || response.StatusCode == HttpStatusCode.Accepted)
                     {
-                        successfulEndpoints.Append("With Api :");
-                        successfulEndpoints.AppendLine(url + "api/" + endpoint);
-                        successfulEndpoints.AppendLine();
+                        lock (uniqueResultsLock)
+                        {
+                            if (!successfulEndpoints.Contains(link))
+                            {
+                                var endpointModel = new EndpointModels
+                                {
+                                    Type = "Api",
+                                    Endpoint = link,
+                                    Message = "Found",
+                                    Amount = successfulEndpoints.Count + 1,
+                                };
+
+                                results.Endpoints.Add(endpointModel);
+                                successfulEndpoints.Add(link);
+                            }
+                        }
                     }
 
                     _helperMethods.IncrementCompletedTasks(ref completedTasks, totalTasks);
@@ -92,23 +135,29 @@ public class EndpointFinder : IEndpointFinder
                 await Task.WhenAll(tasks);
             }
 
-            var result = new StringBuilder();
-            result.AppendLine("Successful Endpoints With Api:");
-            result.AppendLine(successfulEndpoints.ToString());
+            results.Messages.Add($"Found Url with Api: {successfulEndpoints.Count}");
 
-            return result.ToString();
+            return results;
         }
         catch (Exception ex)
         {
-            return $"An error occurred: {ex.Message}";
+            return new EndpointScanerRootModels { Messages = new List<string> { $"An error occurred: {ex.Message}" } };
         }
     }
 
-    public async Task<string> GetEndpointsWithoutApi(string url, List<string> endpoints, int perfectlyDivisorNum)
+    public async Task<EndpointScanerRootModels> GetEndpointsWithoutApi(string url, List<string> endpoints, int perfectlyDivisorNum)
     {
         try
         {
-            var successfulEndpoints = new StringBuilder();
+            var successfulEndpoints = new HashSet<string>();
+
+            var results = new EndpointScanerRootModels
+            {
+                Endpoints = new HashSet<EndpointModels>(),
+                Messages = new List<string>(),
+            };
+
+            object uniqueResultsLock = new object();
 
             using var httpClient = new HttpClient();
 
@@ -124,12 +173,27 @@ public class EndpointFinder : IEndpointFinder
             {
                 var tasks = batch.Select(async endpoint =>
                 {
-                    var response = await httpClient.GetAsync(url + endpoint);
+                    var link = url + endpoint;
+
+                    var response = await httpClient.GetAsync(link);
                     if (response.StatusCode == HttpStatusCode.OK || response.StatusCode == HttpStatusCode.Accepted)
                     {
-                        successfulEndpoints.Append("Clean Endpoints :");
-                        successfulEndpoints.AppendLine(url + endpoint);
-                        successfulEndpoints.AppendLine();
+                        lock (uniqueResultsLock)
+                        {
+                            if (!successfulEndpoints.Contains(link))
+                            {
+                                var endpointModel = new EndpointModels
+                                {
+                                    Type = "Clean",
+                                    Endpoint = link,
+                                    Message = "Found",
+                                    Amount = successfulEndpoints.Count + 1,
+                                };
+
+                                results.Endpoints.Add(endpointModel);
+                                successfulEndpoints.Add(link);
+                            }
+                        }
                     }
 
                     _helperMethods.IncrementCompletedTasks(ref completedTasks, totalTasks);
@@ -139,23 +203,29 @@ public class EndpointFinder : IEndpointFinder
                 await Task.WhenAll(tasks);
             }
 
-            var result = new StringBuilder();
-            result.AppendLine("Successful Endpoints Without Api:");
-            result.AppendLine(successfulEndpoints.ToString());
+            results.Messages.Add($"Found Clean Url: {successfulEndpoints.Count}");
 
-            return result.ToString();
+            return results;
         }
         catch (Exception ex)
         {
-            return $"An error occurred: {ex.Message}";
+            return new EndpointScanerRootModels { Messages = new List<string> { $"An error occurred: {ex.Message}" } };
         }
     }
 
-    public async Task<string> GetEndpointsWithS(string url, List<string> endpoints, int perfectlyDivisorNum)
+    public async Task<EndpointScanerRootModels> GetEndpointsWithS(string url, List<string> endpoints, int perfectlyDivisorNum)
     {
         try
         {
-            var successfulEndpoints = new StringBuilder();
+            var successfulEndpoints = new HashSet<string>();
+
+            var results = new EndpointScanerRootModels
+            {
+                Endpoints = new HashSet<EndpointModels>(),
+                Messages = new List<string>(),
+            };
+
+            object uniqueResultsLock = new object();
 
             using var httpClient = new HttpClient();
             var batches = endpoints.Select((endpoint, index) => new { endpoint, index })
@@ -170,12 +240,28 @@ public class EndpointFinder : IEndpointFinder
             {
                 var tasks = batch.Select(async endpoint =>
                 {
-                    var response = await httpClient.GetAsync(url + endpoint + "s");
+                    var link = url + endpoint + "s";
+
+                    var response = await httpClient.GetAsync(link);
+
                     if (response.StatusCode == HttpStatusCode.OK || response.StatusCode == HttpStatusCode.Accepted)
                     {
-                        successfulEndpoints.Append("With S :");
-                        successfulEndpoints.AppendLine(url + endpoint + "s");
-                        successfulEndpoints.AppendLine();
+                        lock (uniqueResultsLock)
+                        {
+                            if (!successfulEndpoints.Contains(link))
+                            {
+                                var endpointModel = new EndpointModels
+                                {
+                                    Type = "S",
+                                    Endpoint = link,
+                                    Message = "Found",
+                                    Amount = successfulEndpoints.Count + 1,
+                                };
+
+                                results.Endpoints.Add(endpointModel);
+                                successfulEndpoints.Add(link);
+                            }
+                        }
                     }
 
                     _helperMethods.IncrementCompletedTasks(ref completedTasks, totalTasks);
@@ -185,15 +271,13 @@ public class EndpointFinder : IEndpointFinder
                 await Task.WhenAll(tasks);
             }
 
-            var result = new StringBuilder();
-            result.AppendLine("Successful Endpoints With S:");
-            result.AppendLine(successfulEndpoints.ToString());
+            results.Messages.Add($"Found Url With S : {successfulEndpoints.Count}");
 
-            return result.ToString();
+            return results;
         }
         catch (Exception ex)
         {
-            return $"An error occurred: {ex.Message}";
+            return new EndpointScanerRootModels { Messages = new List<string> { $"An error occurred: {ex.Message}" } };
         }
     }
 }

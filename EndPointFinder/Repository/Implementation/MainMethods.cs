@@ -1,4 +1,5 @@
 ﻿using EndPointFinder.Models.ApiScanerModels;
+using EndPointFinder.Models.EndpointScanerModels;
 using EndPointFinder.Repository.Interfaces;
 
 namespace EndPointFinder.Repository.Implementation;
@@ -9,30 +10,42 @@ public class MainMethods : IMainMethods
     private readonly IEndpointFinder _endpointFinder = new EndpointFinder();
     private readonly IApiFinder _apiFinder = new ApiFinder();
 
-    public async Task<List<string>> ScanWebSiteForEnpoints(string url)
+    public async Task<EndpointScanerRootModels> ScanWebSiteForEnpoints(string url)
     {
-        var configData = await _helperMethods.LoadConfig();
-        var endpoints = await _helperMethods.WordTrimmerFromTxt(configData.TextPath);
-        var results = new List<string>();
+        try
+        {
+            var configData = await _helperMethods.LoadConfig();
+            var endpoints = await _helperMethods.WordTrimmerFromTxt(configData.TextPath);
 
-        Task<string> task1 = _endpointFinder.GetEndpointsWithoutApi(url, endpoints, configData.PerfectlyDivisorNum);
-        Task<string> task2 = _endpointFinder.GetEndpointsWithApi(url, endpoints, configData.PerfectlyDivisorNum);
-        Task<string> task3 = _endpointFinder.GetEndpointsWithS(url, endpoints, configData.PerfectlyDivisorNum);
-        Task<string> task4 = _endpointFinder.GetEndpointsWithApiAndS(url, endpoints, configData.PerfectlyDivisorNum);
+            var results = new EndpointScanerRootModels
+            {
+                Endpoints = new HashSet<EndpointModels>(),
+                Messages = new List<string>(),
+            };
 
-        await Task.WhenAll(task1, task2, task3, task4);
+            Task<EndpointScanerRootModels> task1 = _endpointFinder.GetEndpointsWithoutApi(url, endpoints, configData.PerfectlyDivisorNum);
+            Task<EndpointScanerRootModels> task2 = _endpointFinder.GetEndpointsWithApi(url, endpoints, configData.PerfectlyDivisorNum);
+            Task<EndpointScanerRootModels> task3 = _endpointFinder.GetEndpointsWithS(url, endpoints, configData.PerfectlyDivisorNum);
+            Task<EndpointScanerRootModels> task4 = _endpointFinder.GetEndpointsWithApiAndS(url, endpoints, configData.PerfectlyDivisorNum);
 
-        results.Add(task1.Result);
-        results.Add(task2.Result);
-        results.Add(task3.Result);
-        results.Add(task4.Result);
+            await Task.WhenAll(task1, task2, task3, task4);
 
-        _helperMethods.WriteEndpointsToFile(task1.Result);
-        _helperMethods.WriteEndpointsToFile(task2.Result);
-        _helperMethods.WriteEndpointsToFile(task3.Result);
-        _helperMethods.WriteEndpointsToFile(task4.Result);
+            results.Endpoints.UnionWith(task1.Result.Endpoints);
+            results.Endpoints.UnionWith(task2.Result.Endpoints);
+            results.Endpoints.UnionWith(task3.Result.Endpoints);
+            results.Endpoints.UnionWith(task4.Result.Endpoints);
 
-        return results;
+            results.Messages.AddRange(task1.Result.Messages);
+            results.Messages.AddRange(task2.Result.Messages);
+            results.Messages.AddRange(task3.Result.Messages);
+            results.Messages.AddRange(task4.Result.Messages);
+
+            return results;
+        }
+        catch (Exception ex)
+        {
+            return new EndpointScanerRootModels { Messages = new List<string> { $"An error occurred: {ex.Message}" } };
+        }
     }
 
     public async Task<ApiScanerRootModels> ScanWebSiteForApis(string url)
