@@ -1,4 +1,5 @@
-﻿using EndPointFinder.Repository.Configuration;
+﻿using EndPointFinder.Models.UrlModel;
+using EndPointFinder.Repository.Configuration;
 
 namespace EndPointFinder.Repository.Interfaces;
 
@@ -20,7 +21,7 @@ public interface IHelperMethods
 
     void WriteApiKeyToFile(string content);
 
-    Task<string> GetValidUrl(string inputUrl);
+    Task<UrlModel> GetValidUrl(string inputUrl);
 
-    bool IsValidUrl(string url);
+    Task<bool> IsValidUrl(string url);
 }

@@ -1,4 +1,6 @@
-﻿using EndPointFinder.Repository.Configuration;
+﻿using EndPointFinder.Models.ApiScanerModels;
+using EndPointFinder.Models.UrlModel;
+using EndPointFinder.Repository.Configuration;
 using EndPointFinder.Repository.Interfaces;
 using System.Text.Json;
 using System.Text.RegularExpressions;
@@ -189,25 +191,32 @@ public class HelperMethods : IHelperMethods
         }
     }
 
-#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
-    public async Task<string> GetValidUrl(string inputUrl)
-#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
+    public async Task<UrlModel> GetValidUrl(string inputUrl)
     {
-        if (!IsValidUrl(inputUrl))
+        if (!await IsValidUrl(inputUrl))
         {
-            return "Enter Correct Url.";
+            return new UrlModel
+            {
+                Message = "Enter Correct Url.",
+            };
         }
         else if (!inputUrl.StartsWith("http://") && !inputUrl.StartsWith("https://"))
         {
             inputUrl = "https://" + inputUrl + "/";
         }
 
-        return inputUrl;
+        return new UrlModel
+        {
+            Url = inputUrl,
+        };
     }
 
-    public bool IsValidUrl(string url)
+    public async Task<bool> IsValidUrl(string url)
     {
+        var configData = await LoadConfig();
+        var domains = await WordTrimmerFromTxt(configData.DomainPath);
+
         string pattern = @"^(http(s)?://)?([\w-]+\.)+[\w-]+(/[\w- ;,./?%&=]*)?$";
-        return Regex.IsMatch(url, pattern);
+        return Regex.IsMatch(url, pattern) && domains.Any(domain => url.EndsWith(domain));
     }
 }

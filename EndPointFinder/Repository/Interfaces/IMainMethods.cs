@@ -1,7 +1,9 @@
-﻿namespace EndPointFinder.Repository.Interfaces;
+﻿using EndPointFinder.Models.ApiScanerModels;
+
+namespace EndPointFinder.Repository.Interfaces;
 
 public interface IMainMethods
 {
     Task<List<string>> ScanWebSiteForEnpoints(string url);
-    Task<HashSet<string>> ScanWebSiteForApis(string url);
+    Task<ApiScanerRootModels> ScanWebSiteForApis(string url);
 }

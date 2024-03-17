@@ -5,6 +5,7 @@ using DevToolsSessionDomains = OpenQA.Selenium.DevTools.V122.DevToolsSessionDoma
 using Network = OpenQA.Selenium.DevTools.V122.Network;
 using System.Text.RegularExpressions;
 using EndPointFinder.Repository.Interfaces;
+using EndPointFinder.Models.ApiScanerModels;
 
 namespace EndPointFinder.Repository.Implementation;
 
@@ -12,64 +13,86 @@ public class ApiFinder : IApiFinder
 {
     private readonly IHelperMethods _helperMethods = new HelperMethods();
 
-    public async Task<HashSet<string>> ScanAndFind(string urlToTest)
+    public async Task<ApiScanerRootModels> ScanAndFind(string urlToTest)
     {
         ChromeOptions chromeOptions = new();
         chromeOptions.AddArguments("--headless");
         string baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
         string filePath = Path.Combine(baseDirectory, "..", "..", "..", "..", "EndpointFinder", "Repository", "Config");
         ChromeDriverService chromeDriverService = ChromeDriverService.CreateDefaultService(filePath, "chromedriver.exe");
-        var results = new HashSet<string>();
+
+        object uniqueResultsLock = new object();
+
+        var uniqueResults = new HashSet<string>();
+
+        var results = new ApiScanerRootModels
+        {
+            Api = new HashSet<ApiModels>(),
+            Key = new HashSet<KeyModels>()
+        };
 
         using IWebDriver driver = new ChromeDriver(chromeDriverService, chromeOptions);
-        try
+
+        IDevTools devTools = driver as IDevTools;
+
+        IDevToolsSession session = devTools.GetDevToolsSession();
+        DevToolsSessionDomains devToolsSession = session.GetVersionSpecificDomains<DevToolsSessionDomains>();
+
+        await devToolsSession.Network.Enable(new Network.EnableCommandSettings());
+
+        devToolsSession.Network.RequestWillBeSent += (sender, e) =>
         {
-            IDevTools devTools = driver as IDevTools;
-
-            IDevToolsSession session = devTools.GetDevToolsSession();
-            DevToolsSessionDomains devToolsSession = session.GetVersionSpecificDomains<DevToolsSessionDomains>();
-
-            await devToolsSession.Network.Enable(new Network.EnableCommandSettings());
-
-            devToolsSession.Network.RequestWillBeSent += (sender, e) =>
+            if (Regex.IsMatch(e.Request.Url, @"\bapi\b"))
             {
-                if (Regex.IsMatch(e.Request.Url, @"\bapi\b"))
+                string requestInfo = $"Api - Request URL: {e.Request.Url}, Initiator URL: {e.Initiator.Url}";
+
+                lock (uniqueResultsLock)
                 {
-                    string requestInfo = $"Api - Request URL: {e.Request.Url}, Initiator URL: {e.Initiator.Url}";
-                    if (!results.Contains(requestInfo))
+                    if (!uniqueResults.Contains(requestInfo))
                     {
-                        _helperMethods.WriteToFile(requestInfo);
+                        var apiModel = new ApiModels
+                        {
+                            RequestUrl = e.Request.Url,
+                            InitiatorUrl = e.Initiator.Url
+                        };
+
+                        results.Api.Add(apiModel);
                     }
-
-                    results.Add(requestInfo);
                 }
-            };
 
-            devToolsSession.Network.RequestWillBeSent += (sender, e) =>
-            {
-                if (Regex.IsMatch(e.Request.Url, @"\b(apiKey|key)\b"))
-                {
-                    string requestInfo = $"Key - Request URL: {e.Request.Url}, Initiator URL: {e.Initiator.Url}";
+                uniqueResults.Add(requestInfo);
+            }
+        };
 
-                    if (!results.Contains(requestInfo))
-                    {
-                        _helperMethods.WriteApiKeyToFile(requestInfo);
-                    }
-
-                    results.Add(requestInfo);
-                }
-            };
-
-            await NetworkInterceptionTest(urlToTest, devToolsSession, driver);
-            await SetAdditionalHeadersTest(urlToTest, devToolsSession, driver);
-            await SetUserAgentTest(urlToTest, devToolsSession, driver);
-
-            return results;
-        }
-        catch (Exception ex)
+        devToolsSession.Network.RequestWillBeSent += (sender, e) =>
         {
-            return [$"An error occurred: {ex.Message}"];
-        }
+            if (Regex.IsMatch(e.Request.Url, @"\b(apiKey|key)\b"))
+            {
+                string requestInfo = $"Key - Request URL: {e.Request.Url}, Initiator URL: {e.Initiator.Url}";
+
+                lock (uniqueResultsLock)
+                {
+                    if (!uniqueResults.Contains(requestInfo))
+                    {
+                        var keyModel = new KeyModels
+                        {
+                            RequestUrl = e.Request.Url,
+                            InitiatorUrl = e.Initiator.Url
+                        };
+
+                        results.Key.Add(keyModel);
+                    }
+                }
+
+                uniqueResults.Add(requestInfo);
+            }
+        };
+
+        await NetworkInterceptionTest(urlToTest, devToolsSession, driver);
+        await SetAdditionalHeadersTest(urlToTest, devToolsSession, driver);
+        await SetUserAgentTest(urlToTest, devToolsSession, driver);
+
+        return results;
     }
 
     public async Task NetworkInterceptionTest(string urlToTest, DevToolsSessionDomains devToolsSession, IWebDriver driver)

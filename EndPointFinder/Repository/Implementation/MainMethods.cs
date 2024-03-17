@@ -1,4 +1,5 @@
-﻿using EndPointFinder.Repository.Interfaces;
+﻿using EndPointFinder.Models.ApiScanerModels;
+using EndPointFinder.Repository.Interfaces;
 
 namespace EndPointFinder.Repository.Implementation;
 
@@ -34,15 +35,8 @@ public class MainMethods : IMainMethods
         return results;
     }
 
-    public async Task<HashSet<string>> ScanWebSiteForApis(string url)
+    public async Task<ApiScanerRootModels> ScanWebSiteForApis(string url)
     {
-        try
-        {
-            return await _apiFinder.ScanAndFind(url);
-        }
-        catch (Exception ex)
-        {
-            return new HashSet<string> { ex.Message };
-        }
+        return await _apiFinder.ScanAndFind(url);
     }
 }

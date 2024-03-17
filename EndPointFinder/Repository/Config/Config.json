@@ -1,4 +1,5 @@
 ﻿{
   "TextPath": "C:\\Users\\oilur\\source\\repos\\EndPointFinder\\EndPointFinder\\Data\\Dataset\\Dataset.txt",
+  "DomainPath": "C:\\Users\\oilur\\source\\repos\\EndPointFinder\\EndPointFinder\\Data\\Dataset\\DomainList.txt",
   "PerfectlyDivisorNum": 8
 }

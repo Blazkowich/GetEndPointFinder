@@ -19,7 +19,14 @@ namespace ScaNet.Controllers
         public async Task<IActionResult> ScanForApi(string url)
         {
             var validUrl = await _helperMethods.GetValidUrl(url);
-            var result = await _mainMethods.ScanWebSiteForApis(validUrl);
+            
+            if (validUrl.Url is null)
+            {
+                return BadRequest(validUrl.Message);
+            
+            }
+
+            var result = await _mainMethods.ScanWebSiteForApis(validUrl.Url);
             return Ok(result);
         }
 
@@ -27,7 +34,13 @@ namespace ScaNet.Controllers
         public async Task<IActionResult> ScanForEndpoints(string url)
         {
             var validUrl = await _helperMethods.GetValidUrl(url);
-            var result = await _mainMethods.ScanWebSiteForEnpoints(validUrl);
+            
+            if (validUrl.Url is null)
+            {
+                return BadRequest(validUrl.Message);
+            }
+
+            var result = await _mainMethods.ScanWebSiteForEnpoints(validUrl.Url);
             return Ok(result);
         }
     }
