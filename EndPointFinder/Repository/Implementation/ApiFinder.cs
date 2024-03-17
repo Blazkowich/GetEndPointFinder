@@ -6,12 +6,23 @@ using Network = OpenQA.Selenium.DevTools.V122.Network;
 using System.Text.RegularExpressions;
 using EndPointFinder.Repository.Interfaces;
 using EndPointFinder.Models.ApiScanerModels;
+using EndPointFinder.Data.Context.Settings;
+using EndPointFinder.Models.EndpointScanerModels;
+using Microsoft.Extensions.Options;
+using MongoDB.Driver;
 
 namespace EndPointFinder.Repository.Implementation;
 
 public class ApiFinder : IApiFinder
 {
-    private readonly IHelperMethods _helperMethods = new HelperMethods();
+    private readonly IMongoCollection<ApiScanerRootModels> _apiscan;
+    private readonly IHelperMethods _helperMethods;
+
+    public ApiFinder(IMongoCollection<ApiScanerRootModels> apiscan, IHelperMethods helperMethods)
+    {
+        _apiscan = apiscan;
+        _helperMethods = helperMethods;
+    }
 
     public async Task<ApiScanerRootModels> ScanAndFind(string urlToTest)
     {
@@ -91,7 +102,8 @@ public class ApiFinder : IApiFinder
         await NetworkInterceptionTest(urlToTest, devToolsSession, driver);
         await SetAdditionalHeadersTest(urlToTest, devToolsSession, driver);
         await SetUserAgentTest(urlToTest, devToolsSession, driver);
-
+        
+        await _apiscan.InsertOneAsync(results);
         return results;
     }
 

@@ -4,6 +4,8 @@ namespace EndPointFinder.Repository.Interfaces;
 
 public interface IEndpointFinder
 {
+    Task<EndpointScanerRootModels> MergedEndpointScanner(string url);
+
     Task<EndpointScanerRootModels> GetEndpointsWithApiAndS(string url, List<string> endpoints, int perfectlyDivisorNum);
 
     Task<EndpointScanerRootModels> GetEndpointsWithApi(string url, List<string> endpoints, int perfectlyDivisorNum);
