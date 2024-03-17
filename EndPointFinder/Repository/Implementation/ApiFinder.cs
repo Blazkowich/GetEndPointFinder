@@ -27,8 +27,8 @@ public class ApiFinder : IApiFinder
 
         var results = new ApiScanerRootModels
         {
-            Api = new HashSet<ApiModels>(),
-            Key = new HashSet<KeyModels>()
+            Apis = new HashSet<ApiModels>(),
+            Keys = new HashSet<KeyModels>()
         };
 
         using IWebDriver driver = new ChromeDriver(chromeDriverService, chromeOptions);
@@ -56,7 +56,7 @@ public class ApiFinder : IApiFinder
                             InitiatorUrl = e.Initiator.Url
                         };
 
-                        results.Api.Add(apiModel);
+                        results.Apis.Add(apiModel);
                     }
                 }
 
@@ -80,7 +80,7 @@ public class ApiFinder : IApiFinder
                             InitiatorUrl = e.Initiator.Url
                         };
 
-                        results.Key.Add(keyModel);
+                        results.Keys.Add(keyModel);
                     }
                 }
 

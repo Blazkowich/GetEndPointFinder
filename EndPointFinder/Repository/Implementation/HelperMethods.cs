@@ -1,5 +1,4 @@
-﻿using EndPointFinder.Models.ApiScanerModels;
-using EndPointFinder.Models.UrlModel;
+﻿using EndPointFinder.Models.UrlModel;
 using EndPointFinder.Repository.Configuration;
 using EndPointFinder.Repository.Interfaces;
 using System.Text.Json;
