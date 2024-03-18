@@ -10,6 +10,7 @@ using EndPointFinder.Repository.Interfaces.IApiFinderInterface;
 using EndPointFinder.Repository.Interfaces.IEndpointFinderInterface;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
+using ScaNet.Helpers;
 
 namespace ScaNet
 {
@@ -25,6 +26,8 @@ namespace ScaNet
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
             builder.Services.AddRouting();
+
+            builder.Services.AddAutoMapper(typeof(AutoMapperProfile));
 
             builder.Services.Configure<MongoSettings>(
                         builder.Configuration.GetSection("ScanNetDatabaseSettings"));

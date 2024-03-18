@@ -1,6 +1,9 @@
-﻿using EndPointFinder.Repository.Helpers.HelperMethodsImplementation;
+﻿using AutoMapper;
+using EndPointFinder.Models.ApiScanerModels;
+using EndPointFinder.Repository.Helpers.HelperMethodsImplementation;
 using EndPointFinder.Repository.Interfaces.IApiFinderInterface;
 using Microsoft.AspNetCore.Mvc;
+using ScaNet.Helpers;
 
 namespace ScaNet.Controllers;
 
@@ -10,12 +13,14 @@ public class ScanApiController : ControllerBase
     private readonly IApiFinderGet _apiFinderGet;
     private readonly IApiFinderPost _apiFinderPost;
     private readonly IHelperMethods _helperMethods;
+    private readonly IMapper _mapper;
 
-    public ScanApiController(IApiFinderGet apiFinderGet, IApiFinderPost apiFinderPost, IHelperMethods helperMethods)
+    public ScanApiController(IApiFinderGet apiFinderGet, IApiFinderPost apiFinderPost, IHelperMethods helperMethods, IMapper mapper)
     {
         _apiFinderGet = apiFinderGet;
         _apiFinderPost = apiFinderPost;
         _helperMethods = helperMethods;
+        _mapper = mapper;
     }
 
     [HttpPost("scanet/scanApis/{url}")]
@@ -37,20 +42,27 @@ public class ScanApiController : ControllerBase
     public async Task<IActionResult> GetAllApis()
     {
         var result = await _apiFinderGet.GetAllApis();
-        return Ok(result);
+        return result.ToActionResult<IEnumerable<ApiScanerRootModels>, IEnumerable<ApiScanerModels>>(_mapper);
     }
 
     [HttpGet("getApis/withoutMedia/{id}")]
     public async Task<IActionResult> GetApisWithoutMedia(string id)
     {
         var result = await _apiFinderGet.GetFilteredApisWithoutMedia(id);
-        return Ok(result);
+        return result.ToActionResult<IEnumerable<ApiModels>, IEnumerable<ApiScanerModels.ApiResponseModels>>(_mapper);
     }
 
     [HttpGet("getApis/{id}")]
     public async Task<IActionResult> GetApisById(string id)
     {
         var result = await _apiFinderGet.GetApiCollectionById(id);
-        return Ok(result);
+        return result.ToActionResult<IEnumerable<ApiModels>, IEnumerable<ApiScanerModels.ApiResponseModels>>(_mapper);
+    }
+
+    [HttpGet("getKeys/{id}")]
+    public async Task<IActionResult> GetKeysById(string id)
+    {
+        var result = await _apiFinderGet.GetKeyCollectionById(id);
+        return result.ToActionResult<IEnumerable<KeyModels>, IEnumerable<ApiScanerModels.KeyResponseModels>>(_mapper);
     }
 }
