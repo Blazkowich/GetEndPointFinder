@@ -10,7 +10,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.editorconfig = .editorconfig
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScaNet", "ScaNet\ScaNet.csproj", "{600D4A58-4E35-4D7C-880F-A646A7995556}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ScaNet.Api", "ScaNet\ScaNet.Api.csproj", "{600D4A58-4E35-4D7C-880F-A646A7995556}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScanNet.MVC", "ScanNet\ScanNet.MVC.csproj", "{07F9877A-3454-4ADF-9A0A-9FF6BC0A3252}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -26,6 +28,10 @@ Global
 		{600D4A58-4E35-4D7C-880F-A646A7995556}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{600D4A58-4E35-4D7C-880F-A646A7995556}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{600D4A58-4E35-4D7C-880F-A646A7995556}.Release|Any CPU.Build.0 = Release|Any CPU
+		{07F9877A-3454-4ADF-9A0A-9FF6BC0A3252}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{07F9877A-3454-4ADF-9A0A-9FF6BC0A3252}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{07F9877A-3454-4ADF-9A0A-9FF6BC0A3252}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{07F9877A-3454-4ADF-9A0A-9FF6BC0A3252}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

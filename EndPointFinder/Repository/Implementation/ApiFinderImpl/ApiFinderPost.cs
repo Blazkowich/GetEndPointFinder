@@ -7,6 +7,7 @@ using System.Text.RegularExpressions;
 using EndPointFinder.Models.ApiScanerModels;
 using MongoDB.Driver;
 using EndPointFinder.Repository.Interfaces.IApiFinderInterface;
+using EndPointFinder.Repository.Helpers.ExecutionMethods;
 
 namespace EndPointFinder.Repository.Implementation.ApiFinder;
 
@@ -19,12 +20,12 @@ public class ApiFinderPost : IApiFinderPost
         _apiscan = apiscan;
     }
 
-    public async Task<ApiScanerRootModels> ScanAndFind(string urlToTest, bool ignoreMedia)
+    public async Task<ExecutionResult<ApiScanerRootModels>> ScanAndFind(string urlToTest, bool ignoreMedia)
     {
         ChromeOptions chromeOptions = new();
         chromeOptions.AddArguments("--headless");
         string baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
-        string filePath = Path.Combine(baseDirectory, "..", "..", "..", "..", "EndpointFinder", "Repository", "Config");
+        string filePath = Path.Combine(baseDirectory, "..", "..", "..", "..", "EndpointFinder", "Data", "Config");
         ChromeDriverService chromeDriverService = ChromeDriverService.CreateDefaultService(filePath, "chromedriver.exe");
 
         object uniqueResultsLock = new object();
@@ -126,8 +127,22 @@ public class ApiFinderPost : IApiFinderPost
         await SetAdditionalHeadersTest(urlToTest, devToolsSession, driver);
         await SetUserAgentTest(urlToTest, devToolsSession, driver);
 
+        if (results == null)
+        {
+            return new ExecutionResult<ApiScanerRootModels>
+            {
+                ResultType = ExecutionResultType.BadRequest,
+                Message = $"Issue With Web Site {urlToTest}"
+            };
+        }
+
         await _apiscan.InsertOneAsync(results);
-        return results;
+
+        return new ExecutionResult<ApiScanerRootModels>
+        {
+            ResultType = ExecutionResultType.Ok,
+            Value = results,
+        };
     }
 
     public async Task NetworkInterceptionTest(string urlToTest, DevToolsSessionDomains devToolsSession, IWebDriver driver)

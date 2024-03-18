@@ -35,7 +35,7 @@ public class ScanApiController : ControllerBase
         }
 
         var result = await _apiFinderPost.ScanAndFind(validUrl.Url, imf);
-        return Ok(result);
+        return result.ToActionResult<ApiScanerRootModels, ApiScanerModels>(_mapper);
     }
 
     [HttpGet("getApis")]
