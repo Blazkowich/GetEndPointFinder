@@ -45,17 +45,10 @@ public class ScanApiController : ControllerBase
         return result.ToActionResult<IEnumerable<ApiScanerRootModels>, IEnumerable<ApiScanerModels>>(_mapper);
     }
 
-    [HttpGet("getApis/withoutMedia/{id}")]
-    public async Task<IActionResult> GetApisWithoutMedia(string id)
-    {
-        var result = await _apiFinderGet.GetFilteredApisWithoutMedia(id);
-        return result.ToActionResult<IEnumerable<ApiModels>, IEnumerable<ApiScanerModels.ApiResponseModels>>(_mapper);
-    }
-
     [HttpGet("getApis/{id}")]
-    public async Task<IActionResult> GetApisById(string id)
+    public async Task<IActionResult> GetApisById(string id, bool imf) // imf - If True - Ignore Media Files
     {
-        var result = await _apiFinderGet.GetApiCollectionById(id);
+        var result = await _apiFinderGet.GetApiCollectionById(id, imf);
         return result.ToActionResult<IEnumerable<ApiModels>, IEnumerable<ApiScanerModels.ApiResponseModels>>(_mapper);
     }
 

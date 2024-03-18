@@ -37,46 +37,31 @@ public class ApiFinderGet : IApiFinderGet
         };
     }
 
-    public async Task<ExecutionResult<IEnumerable<ApiModels>>> GetFilteredApisWithoutMedia(string id)
+    public async Task<ExecutionResult<IEnumerable<ApiModels>>> GetApiCollectionById(string id, bool ignoreMedia)
     {
         FilterDefinition<ApiScanerRootModels> filter = Builders<ApiScanerRootModels>.Filter.Eq(x => x.Id, id);
 
         List<ApiScanerRootModels> matchingDocuments = await _apiscan.Find(filter).ToListAsync();
 
-        List<ApiModels> result = matchingDocuments
-            .SelectMany(doc => doc.Apis)
-            .Where(api => !api.RequestUrl.EndsWith(".webp"))
-            .GroupBy(api => api.RequestUrl)
-            .Select(group => group.First())
-            .ToList();
+        List<ApiModels> result;
 
-        if (result == null)
+        if (ignoreMedia)
         {
-            return new ExecutionResult<IEnumerable<ApiModels>>
-            {
-                ResultType = ExecutionResultType.NotFound,
-                Message = $"No Api Collection Was Found On {id} ID.",
-            };
+            result = matchingDocuments
+                .SelectMany(doc => doc.Apis)
+                .Where(api => !api.RequestUrl.EndsWith(".webp"))
+                .GroupBy(api => api.RequestUrl)
+                .Select(group => group.First())
+                .ToList();
+        }
+        else
+        {
+            result = matchingDocuments
+                .SelectMany(doc => doc.Apis)
+                .ToList();
         }
 
-        return new ExecutionResult<IEnumerable<ApiModels>>
-        {
-            ResultType = ExecutionResultType.Ok,
-            Value = _mapper.Map<IEnumerable<ApiModels>>(result),
-        };
-    }
-
-    public async Task<ExecutionResult<IEnumerable<ApiModels>>> GetApiCollectionById(string id)
-    {
-        FilterDefinition<ApiScanerRootModels> filter = Builders<ApiScanerRootModels>.Filter.Eq(x => x.Id, id);
-
-        List<ApiScanerRootModels> matchingDocuments = await _apiscan.Find(filter).ToListAsync();
-
-        List<ApiModels> result = matchingDocuments
-            .SelectMany(doc => doc.Apis)
-            .ToList();
-
-        if (result == null)
+        if (result == null || !result.Any())
         {
             return new ExecutionResult<IEnumerable<ApiModels>>
             {
