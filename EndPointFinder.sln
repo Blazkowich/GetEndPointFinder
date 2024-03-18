@@ -10,9 +10,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.editorconfig = .editorconfig
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ScaNet.Api", "ScaNet\ScaNet.Api.csproj", "{600D4A58-4E35-4D7C-880F-A646A7995556}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ScaNet.Api", "ScaNet.Api\ScaNet.Api.csproj", "{600D4A58-4E35-4D7C-880F-A646A7995556}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScanNet.MVC", "ScanNet\ScanNet.MVC.csproj", "{07F9877A-3454-4ADF-9A0A-9FF6BC0A3252}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScanNet.MVC", "ScanNet.MVC\ScanNet.MVC.csproj", "{07F9877A-3454-4ADF-9A0A-9FF6BC0A3252}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
