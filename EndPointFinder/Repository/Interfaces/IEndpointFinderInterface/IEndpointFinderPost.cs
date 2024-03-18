@@ -1,16 +1,17 @@
 ﻿using EndPointFinder.Models.EndpointScanerModels;
+using EndPointFinder.Repository.Helpers.ExecutionMethods;
 
 namespace EndPointFinder.Repository.Interfaces.IEndpointFinderInterface;
 
 public interface IEndpointFinderPost
 {
-    Task<EndpointScanerRootModels> MergedEndpointScanner(string url);
+    Task<ExecutionResult<EndpointScanerRootModels>> MergedEndpointScanner(string url);
 
-    Task<EndpointScanerRootModels> ScanEndpointsWithApiAndS(string url);
+    Task<ExecutionResult<EndpointScanerRootModels>> ScanEndpointsWithApiAndS(string url);
 
-    Task<EndpointScanerRootModels> ScanEndpointsWithApi(string url);
+    Task<ExecutionResult<EndpointScanerRootModels>> ScanEndpointsWithApi(string url);
 
-    Task<EndpointScanerRootModels> ScanEndpointsWithoutApi(string url);
+    Task<ExecutionResult<EndpointScanerRootModels>> ScanEndpointsWithoutApi(string url);
 
-    Task<EndpointScanerRootModels> ScanEndpointsWithS(string url);
+    Task<ExecutionResult<EndpointScanerRootModels>> ScanEndpointsWithS(string url);
 }

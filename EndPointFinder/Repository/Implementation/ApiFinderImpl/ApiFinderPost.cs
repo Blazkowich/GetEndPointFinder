@@ -8,16 +8,19 @@ using EndPointFinder.Models.ApiScanerModels;
 using MongoDB.Driver;
 using EndPointFinder.Repository.Interfaces.IApiFinderInterface;
 using EndPointFinder.Repository.Helpers.ExecutionMethods;
+using AutoMapper;
 
 namespace EndPointFinder.Repository.Implementation.ApiFinder;
 
 public class ApiFinderPost : IApiFinderPost
 {
     private readonly IMongoCollection<ApiScanerRootModels> _apiscan;
+    private readonly IMapper _mapper;
 
-    public ApiFinderPost(IMongoCollection<ApiScanerRootModels> apiscan)
+    public ApiFinderPost(IMongoCollection<ApiScanerRootModels> apiscan, IMapper mapper)
     {
         _apiscan = apiscan;
+        _mapper = mapper;
     }
 
     public async Task<ExecutionResult<ApiScanerRootModels>> ScanAndFind(string urlToTest, bool ignoreMedia)
@@ -141,7 +144,7 @@ public class ApiFinderPost : IApiFinderPost
         return new ExecutionResult<ApiScanerRootModels>
         {
             ResultType = ExecutionResultType.Ok,
-            Value = results,
+            Value = _mapper.Map<ApiScanerRootModels>(results),
         };
     }
 

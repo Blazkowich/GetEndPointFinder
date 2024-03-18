@@ -1,6 +1,10 @@
+using AutoMapper;
+using EndPointFinder.Models.EndpointScanerModels;
 using EndPointFinder.Repository.Helpers.HelperMethodsImplementation;
 using EndPointFinder.Repository.Interfaces.IEndpointFinderInterface;
 using Microsoft.AspNetCore.Mvc;
+using ScaNet.Helpers;
+using System.Collections.Generic;
 
 namespace ScaNet.Controllers
 {
@@ -10,19 +14,25 @@ namespace ScaNet.Controllers
         private readonly IEndpointFinderGet _endpointFinderGet;
         private readonly IEndpointFinderPost _endpointFinderPost;
         private readonly IHelperMethods _helperMethods;
+        private readonly IMapper _mapper;
 
-        public ScanEndpointController(IHelperMethods helperMethods, IEndpointFinderGet endpointFinderGet, IEndpointFinderPost endpointFinderPost)
+        public ScanEndpointController(
+            IHelperMethods helperMethods, 
+            IEndpointFinderGet endpointFinderGet, 
+            IEndpointFinderPost endpointFinderPost,
+            IMapper mapper)
         {
             _helperMethods = helperMethods;
             _endpointFinderGet = endpointFinderGet;
             _endpointFinderPost = endpointFinderPost;
+            _mapper = mapper;
         }
 
         [HttpGet("getEndpoints")]
         public async Task<IActionResult> GetAllEndpoints()
         {
             var result = await _endpointFinderGet.GetAllEndpoints();
-            return Ok(result);
+            return result.ToActionResult<IEnumerable<EndpointScanerRootModels> , IEnumerable<EndpointScanerModels>>(_mapper);
         }
 
         [HttpPost("scanet/scanEndpointsAll/{url}")]
@@ -36,7 +46,7 @@ namespace ScaNet.Controllers
             }
 
             var result = await _endpointFinderPost.MergedEndpointScanner(validUrl.Url);
-            return Ok(result);
+            return result.ToActionResult<EndpointScanerRootModels, EndpointScanerModels>(_mapper);
         }
 
         [HttpPost("scanet/scanEndpointsClean/{url}")]
@@ -50,7 +60,8 @@ namespace ScaNet.Controllers
             }
 
             var result = await _endpointFinderPost.ScanEndpointsWithoutApi(validUrl.Url);
-            return Ok(result);
+
+            return result.ToActionResult<EndpointScanerRootModels, EndpointScanerModels>(_mapper);
         }
 
         [HttpPost("scanet/scanEndpointsOnlyApi/{url}")]
@@ -64,7 +75,7 @@ namespace ScaNet.Controllers
             }
 
             var result = await _endpointFinderPost.ScanEndpointsWithApi(validUrl.Url);
-            return Ok(result);
+            return result.ToActionResult<EndpointScanerRootModels, EndpointScanerModels>(_mapper);
         }
 
         [HttpPost("scanet/scanEndpointsOnlyS/{url}")]
@@ -78,7 +89,7 @@ namespace ScaNet.Controllers
             }
 
             var result = await _endpointFinderPost.ScanEndpointsWithS(validUrl.Url);
-            return Ok(result);
+            return result.ToActionResult<EndpointScanerRootModels, EndpointScanerModels>(_mapper);
         }
 
         [HttpPost("scanet/scanEndpointsOnlyApiAndS/{url}")]
@@ -92,7 +103,7 @@ namespace ScaNet.Controllers
             }
 
             var result = await _endpointFinderPost.ScanEndpointsWithApiAndS(validUrl.Url);
-            return Ok(result);
+            return result.ToActionResult<EndpointScanerRootModels, EndpointScanerModels>(_mapper);
         }
     }
 }

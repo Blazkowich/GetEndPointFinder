@@ -102,11 +102,11 @@ public class HelperMethods : IHelperMethods
         return wordCount;
     }
 
-    public List<int> PerfectDividerNumberFinder(int numberForDivide)
+    public Task<int> PerfectDividerNumberFinder(int numberForDivide)
     {
-        List<int> listOfPerfectDividers = [];
+        List<int> listOfPerfectDividers = new List<int>();
 
-        for (int num = 5; num <= 10000; num++)
+        for (int num = 2; num < numberForDivide; num++)
         {
             int dividedNumber = numberForDivide % num;
 
@@ -116,11 +116,9 @@ public class HelperMethods : IHelperMethods
             }
         }
 
-        foreach (int perfectDivider in listOfPerfectDividers)
-        {
-            Console.WriteLine(perfectDivider);
-        }
-        return listOfPerfectDividers;
+        listOfPerfectDividers.Sort();
+
+        return Task.FromResult(listOfPerfectDividers.Count > 0 ? listOfPerfectDividers[^1] : numberForDivide);
     }
 
     public async Task<Config> LoadConfig()

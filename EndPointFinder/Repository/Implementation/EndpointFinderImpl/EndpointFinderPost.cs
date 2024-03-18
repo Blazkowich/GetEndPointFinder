@@ -1,4 +1,6 @@
-﻿using EndPointFinder.Models.EndpointScanerModels;
+﻿using AutoMapper;
+using EndPointFinder.Models.EndpointScanerModels;
+using EndPointFinder.Repository.Helpers.ExecutionMethods;
 using EndPointFinder.Repository.Helpers.HelperMethodsImplementation;
 using EndPointFinder.Repository.Interfaces.IEndpointFinderInterface;
 using MongoDB.Driver;
@@ -10,14 +12,16 @@ public class EndpointFinderPost : IEndpointFinderPost
 {
     private readonly IMongoCollection<EndpointScanerRootModels> _endpointscan;
     private readonly IHelperMethods _helperMethods;
+    private readonly IMapper _mapper;
 
-    public EndpointFinderPost(IMongoCollection<EndpointScanerRootModels> endpointscan, IHelperMethods helperMethods)
+    public EndpointFinderPost(IMongoCollection<EndpointScanerRootModels> endpointscan, IHelperMethods helperMethods, IMapper mapper)
     {
         _endpointscan = endpointscan;
         _helperMethods = helperMethods;
+        _mapper = mapper;
     }
 
-    public async Task<EndpointScanerRootModels> MergedEndpointScanner(string url)
+    public async Task<ExecutionResult<EndpointScanerRootModels>> MergedEndpointScanner(string url)
     {
         try
         {
@@ -30,34 +34,49 @@ public class EndpointFinderPost : IEndpointFinderPost
                 Messages = new List<string>(),
             };
 
-            Task<EndpointScanerRootModels> task1 = ScanEndpointsWithoutApi(url);
-            Task<EndpointScanerRootModels> task2 = ScanEndpointsWithApi(url);
-            Task<EndpointScanerRootModels> task3 = ScanEndpointsWithS(url);
-            Task<EndpointScanerRootModels> task4 = ScanEndpointsWithApiAndS(url);
+            Task<ExecutionResult<EndpointScanerRootModels>> task1 = ScanEndpointsWithoutApi(url);
+            Task<ExecutionResult<EndpointScanerRootModels>> task2 = ScanEndpointsWithApi(url);
+            Task<ExecutionResult<EndpointScanerRootModels>> task3 = ScanEndpointsWithS(url);
+            Task<ExecutionResult<EndpointScanerRootModels>> task4 = ScanEndpointsWithApiAndS(url);
 
             await Task.WhenAll(task1, task2, task3, task4);
 
-            results.Endpoints.UnionWith(task1.Result.Endpoints);
-            results.Endpoints.UnionWith(task2.Result.Endpoints);
-            results.Endpoints.UnionWith(task3.Result.Endpoints);
-            results.Endpoints.UnionWith(task4.Result.Endpoints);
+            results.Endpoints.UnionWith(task1.Result.Value.Endpoints);
+            results.Endpoints.UnionWith(task2.Result.Value.Endpoints);
+            results.Endpoints.UnionWith(task3.Result.Value.Endpoints);
+            results.Endpoints.UnionWith(task4.Result.Value.Endpoints);
 
-            results.Messages.AddRange(task1.Result.Messages);
-            results.Messages.AddRange(task2.Result.Messages);
-            results.Messages.AddRange(task3.Result.Messages);
-            results.Messages.AddRange(task4.Result.Messages);
+            results.Messages.AddRange(task1.Result.Value.Messages);
+            results.Messages.AddRange(task2.Result.Value.Messages);
+            results.Messages.AddRange(task3.Result.Value.Messages);
+            results.Messages.AddRange(task4.Result.Value.Messages);
 
-            await _endpointscan.InsertOneAsync(results);
+            if (results == null)
+            {
+                return new ExecutionResult<EndpointScanerRootModels>
+                {
+                    ResultType = ExecutionResultType.BadRequest,
+                    Message = "Error Occured With Merged Scan Methods",
+                };
+            }
 
-            return results;
+            return new ExecutionResult<EndpointScanerRootModels>
+            {
+                ResultType = ExecutionResultType.Ok,
+                Value = _mapper.Map<EndpointScanerRootModels>(results),
+            };
         }
         catch (Exception ex)
         {
-            return new EndpointScanerRootModels { Messages = new List<string> { $"An error occurred: {ex.Message}" } };
+            return new ExecutionResult<EndpointScanerRootModels>
+            {
+                ResultType = ExecutionResultType.BadRequest,
+                Message = $"An error occurred: {ex.Message}",
+            };
         }
     }
 
-    public async Task<EndpointScanerRootModels> ScanEndpointsWithApiAndS(string url)
+    public async Task<ExecutionResult<EndpointScanerRootModels>> ScanEndpointsWithApiAndS(string url)
     {
         var configData = await _helperMethods.LoadConfig();
         var endpoints = await _helperMethods.WordTrimmerFromJson(configData.TextPath);
@@ -118,19 +137,36 @@ public class EndpointFinderPost : IEndpointFinderPost
                 await Task.WhenAll(tasks);
             }
 
-            await _endpointscan.InsertOneAsync(results);
-
             results.Messages.Add($"Found Url With Api and S : {successfulEndpoints.Count}");
 
-            return results;
+            if (results == null)
+            {
+                return new ExecutionResult<EndpointScanerRootModels>
+                {
+                    ResultType = ExecutionResultType.BadRequest,
+                    Message = "Error Occured With Api And S Scan Method",
+                };
+            }
+
+            await _endpointscan.InsertOneAsync(results);
+
+            return new ExecutionResult<EndpointScanerRootModels>
+            {
+                ResultType = ExecutionResultType.Ok,
+                Value = _mapper.Map<EndpointScanerRootModels>(results),
+            };
         }
         catch (Exception ex)
         {
-            return new EndpointScanerRootModels { Messages = new List<string> { $"An error occurred: {ex.Message}" } };
+            return new ExecutionResult<EndpointScanerRootModels>
+            {
+                ResultType = ExecutionResultType.BadRequest,
+                Message = $"An error occurred: {ex.Message}",
+            };
         }
     }
 
-    public async Task<EndpointScanerRootModels> ScanEndpointsWithApi(string url)
+    public async Task<ExecutionResult<EndpointScanerRootModels>> ScanEndpointsWithApi(string url)
     {
         try
         {
@@ -193,17 +229,34 @@ public class EndpointFinderPost : IEndpointFinderPost
 
             results.Messages.Add($"Found Url with Api: {successfulEndpoints.Count}");
 
+            if (results == null)
+            {
+                return new ExecutionResult<EndpointScanerRootModels>
+                {
+                    ResultType = ExecutionResultType.BadRequest,
+                    Message = "Error Occured With Api Scan Method",
+                };
+            }
+
             await _endpointscan.InsertOneAsync(results);
 
-            return results;
+            return new ExecutionResult<EndpointScanerRootModels>
+            {
+                ResultType = ExecutionResultType.Ok,
+                Value = _mapper.Map<EndpointScanerRootModels>(results),
+            };
         }
         catch (Exception ex)
         {
-            return new EndpointScanerRootModels { Messages = new List<string> { $"An error occurred: {ex.Message}" } };
+            return new ExecutionResult<EndpointScanerRootModels>
+            {
+                ResultType = ExecutionResultType.BadRequest,
+                Message = $"An error occurred: {ex.Message}",
+            };
         }
     }
 
-    public async Task<EndpointScanerRootModels> ScanEndpointsWithoutApi(string url)
+    public async Task<ExecutionResult<EndpointScanerRootModels>> ScanEndpointsWithoutApi(string url)
     {
         try
         {
@@ -264,19 +317,36 @@ public class EndpointFinderPost : IEndpointFinderPost
                 await Task.WhenAll(tasks);
             }
 
-            await _endpointscan.InsertOneAsync(results);
-
             results.Messages.Add($"Found Clean Url: {successfulEndpoints.Count}");
 
-            return results;
+            if (results == null)
+            {
+                return new ExecutionResult<EndpointScanerRootModels>
+                {
+                    ResultType = ExecutionResultType.BadRequest,
+                    Message = "Error Occured With Clean Scan Method",
+                };
+            }
+
+            await _endpointscan.InsertOneAsync(results);
+
+            return new ExecutionResult<EndpointScanerRootModels>
+            {
+                ResultType = ExecutionResultType.Ok,
+                Value = _mapper.Map<EndpointScanerRootModels>(results),
+            };
         }
         catch (Exception ex)
         {
-            return new EndpointScanerRootModels { Messages = new List<string> { $"An error occurred: {ex.Message}" } };
+            return new ExecutionResult<EndpointScanerRootModels>
+            {
+                ResultType = ExecutionResultType.BadRequest,
+                Message = $"An error occurred: {ex.Message}",
+            };
         }
     }
 
-    public async Task<EndpointScanerRootModels> ScanEndpointsWithS(string url)
+    public async Task<ExecutionResult<EndpointScanerRootModels>> ScanEndpointsWithS(string url)
     {
         try
         {
@@ -337,15 +407,32 @@ public class EndpointFinderPost : IEndpointFinderPost
                 await Task.WhenAll(tasks);
             }
 
-            await _endpointscan.InsertOneAsync(results);
-
             results.Messages.Add($"Found Url With S : {successfulEndpoints.Count}");
 
-            return results;
+            if (results == null)
+            {
+                return new ExecutionResult<EndpointScanerRootModels>
+                {
+                    ResultType = ExecutionResultType.BadRequest,
+                    Message = "Error Occured With S Scan Method",
+                };
+            }
+
+            await _endpointscan.InsertOneAsync(results);
+
+            return new ExecutionResult<EndpointScanerRootModels>
+            {
+                ResultType = ExecutionResultType.Ok,
+                Value = _mapper.Map<EndpointScanerRootModels>(results),
+            };
         }
         catch (Exception ex)
         {
-            return new EndpointScanerRootModels { Messages = new List<string> { $"An error occurred: {ex.Message}" } };
+            return new ExecutionResult<EndpointScanerRootModels>
+            {
+                ResultType = ExecutionResultType.BadRequest,
+                Message = $"An error occurred: {ex.Message}",
+            };
         }
     }
 }

@@ -13,7 +13,7 @@ public interface IHelperMethods
 
     int CountWordsInFile(string filePath);
 
-    List<int> PerfectDividerNumberFinder(int numberForDivide);
+    Task<int> PerfectDividerNumberFinder(int numberForDivide);
 
     Task<Config> LoadConfig();
 
