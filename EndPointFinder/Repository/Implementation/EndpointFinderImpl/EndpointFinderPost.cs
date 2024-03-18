@@ -1,9 +1,12 @@
 ﻿using AutoMapper;
+using ConcurrentCollections;
+using EndPointFinder.Data.Dataset;
 using EndPointFinder.Models.EndpointScanerModels;
 using EndPointFinder.Repository.Helpers.ExecutionMethods;
 using EndPointFinder.Repository.Helpers.HelperMethodsImplementation;
 using EndPointFinder.Repository.Interfaces.IEndpointFinderInterface;
 using MongoDB.Driver;
+using System.Diagnostics;
 using System.Net;
 
 namespace EndPointFinder.Repository.Implementation.EndpointFinderImpl;
@@ -78,12 +81,12 @@ public class EndpointFinderPost : IEndpointFinderPost
 
     public async Task<ExecutionResult<EndpointScanerRootModels>> ScanEndpointsWithApiAndS(string url)
     {
-        var configData = await _helperMethods.LoadConfig();
-        var endpoints = await _helperMethods.WordTrimmerFromJson(configData.TextPath);
-
         try
         {
-            var successfulEndpoints = new HashSet<string>();
+            var configData = await _helperMethods.LoadConfig();
+            var endpoints = DictionaryHashMap.HashMap.SelectMany(kv => kv.Value).ToList();
+
+            var successfulEndpoints = new ConcurrentHashSet<string>();
 
             var results = new EndpointScanerRootModels
             {
@@ -171,9 +174,9 @@ public class EndpointFinderPost : IEndpointFinderPost
         try
         {
             var configData = await _helperMethods.LoadConfig();
-            var endpoints = await _helperMethods.WordTrimmerFromJson(configData.TextPath);
+            var endpoints = DictionaryHashMap.HashMap.SelectMany(kv => kv.Value).ToList();
 
-            var successfulEndpoints = new HashSet<string>();
+            var successfulEndpoints = new ConcurrentHashSet<string>();
 
             var results = new EndpointScanerRootModels
             {
@@ -258,12 +261,15 @@ public class EndpointFinderPost : IEndpointFinderPost
 
     public async Task<ExecutionResult<EndpointScanerRootModels>> ScanEndpointsWithoutApi(string url)
     {
+        var stopwatch = Stopwatch.StartNew();
+
         try
         {
             var configData = await _helperMethods.LoadConfig();
-            var endpoints = await _helperMethods.WordTrimmerFromJson(configData.TextPath);
 
-            var successfulEndpoints = new HashSet<string>();
+            var endpoints = DictionaryHashMap.HashMap.SelectMany(kv => kv.Value).ToList();
+
+            var successfulEndpoints = new ConcurrentHashSet<string>();
 
             var results = new EndpointScanerRootModels
             {
@@ -330,6 +336,12 @@ public class EndpointFinderPost : IEndpointFinderPost
 
             await _endpointscan.InsertOneAsync(results);
 
+            stopwatch.Stop();
+
+            // Log the elapsed time
+            Console.WriteLine($"Method execution took: {stopwatch.Elapsed.TotalSeconds} seconds");
+
+
             return new ExecutionResult<EndpointScanerRootModels>
             {
                 ResultType = ExecutionResultType.Ok,
@@ -351,9 +363,9 @@ public class EndpointFinderPost : IEndpointFinderPost
         try
         {
             var configData = await _helperMethods.LoadConfig();
-            var endpoints = await _helperMethods.WordTrimmerFromJson(configData.TextPath);
+            var endpoints = DictionaryHashMap.HashMap.SelectMany(kv => kv.Value).ToList();
 
-            var successfulEndpoints = new HashSet<string>();
+            var successfulEndpoints = new ConcurrentHashSet<string>();
 
             var results = new EndpointScanerRootModels
             {
