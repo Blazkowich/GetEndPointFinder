@@ -1,7 +1,7 @@
-﻿using EndPointFinder.Models.UrlModel;
-using EndPointFinder.Repository.Configuration;
+﻿using EndPointFinder.Data.Config;
+using EndPointFinder.Models.UrlModel;
 
-namespace EndPointFinder.Repository.Interfaces;
+namespace EndPointFinder.Repository.Helpers.HelperMethodsImplementation;
 
 public interface IHelperMethods
 {

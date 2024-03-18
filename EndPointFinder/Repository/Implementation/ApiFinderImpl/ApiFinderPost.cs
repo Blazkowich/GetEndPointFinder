@@ -4,29 +4,22 @@ using OpenQA.Selenium.DevTools;
 using DevToolsSessionDomains = OpenQA.Selenium.DevTools.V122.DevToolsSessionDomains;
 using Network = OpenQA.Selenium.DevTools.V122.Network;
 using System.Text.RegularExpressions;
-using EndPointFinder.Repository.Interfaces;
 using EndPointFinder.Models.ApiScanerModels;
 using MongoDB.Driver;
+using EndPointFinder.Repository.Interfaces.IApiFinderInterface;
 
-namespace EndPointFinder.Repository.Implementation;
+namespace EndPointFinder.Repository.Implementation.ApiFinder;
 
-public class ApiFinder : IApiFinder
+public class ApiFinderPost : IApiFinderPost
 {
     private readonly IMongoCollection<ApiScanerRootModels> _apiscan;
-    private readonly IHelperMethods _helperMethods;
 
-    public ApiFinder(IMongoCollection<ApiScanerRootModels> apiscan, IHelperMethods helperMethods)
+    public ApiFinderPost(IMongoCollection<ApiScanerRootModels> apiscan)
     {
         _apiscan = apiscan;
-        _helperMethods = helperMethods;
     }
 
-    public async Task<IEnumerable<ApiScanerRootModels>> GetAllApis()
-    {
-        return await _apiscan.Find(e => true).ToListAsync();
-    }
-
-    public async Task<ApiScanerRootModels> ScanAndFind(string urlToTest)
+    public async Task<ApiScanerRootModels> ScanAndFind(string urlToTest, bool ignoreMedia)
     {
         ChromeOptions chromeOptions = new();
         chromeOptions.AddArguments("--headless");
@@ -63,13 +56,27 @@ public class ApiFinder : IApiFinder
                 {
                     if (!uniqueResults.Contains(requestInfo))
                     {
-                        var apiModel = new ApiModels
+                        if (ignoreMedia && !e.Request.Url.EndsWith(".webp"))
                         {
-                            RequestUrl = e.Request.Url,
-                            InitiatorUrl = e.Initiator.Url
-                        };
+                            var apiModelWithoutMedia = new ApiModels
+                            {
+                                RequestUrl = e.Request.Url,
+                                InitiatorUrl = e.Initiator.Url
+                            };
 
-                        results.Apis.Add(apiModel);
+                            results.Apis.Add(apiModelWithoutMedia);
+                        }
+
+                        else if (!ignoreMedia)
+                        {
+                            var apiModel = new ApiModels
+                            {
+                                RequestUrl = e.Request.Url,
+                                InitiatorUrl = e.Initiator.Url
+                            };
+
+                            results.Apis.Add(apiModel);
+                        }
                     }
                 }
 
@@ -87,13 +94,27 @@ public class ApiFinder : IApiFinder
                 {
                     if (!uniqueResults.Contains(requestInfo))
                     {
-                        var keyModel = new KeyModels
+                        if (ignoreMedia && !e.Request.Url.EndsWith(".webp"))
                         {
-                            RequestUrl = e.Request.Url,
-                            InitiatorUrl = e.Initiator.Url
-                        };
+                            var keyModelWithoutMedia = new KeyModels
+                            {
+                                RequestUrl = e.Request.Url,
+                                InitiatorUrl = e.Initiator.Url
+                            };
 
-                        results.Keys.Add(keyModel);
+                            results.Keys.Add(keyModelWithoutMedia);
+                        }
+
+                        else if (!ignoreMedia)
+                        {
+                            var keyModel = new KeyModels
+                            {
+                                RequestUrl = e.Request.Url,
+                                InitiatorUrl = e.Initiator.Url
+                            };
+
+                            results.Keys.Add(keyModel);
+                        }
                     }
                 }
 
@@ -104,7 +125,7 @@ public class ApiFinder : IApiFinder
         await NetworkInterceptionTest(urlToTest, devToolsSession, driver);
         await SetAdditionalHeadersTest(urlToTest, devToolsSession, driver);
         await SetUserAgentTest(urlToTest, devToolsSession, driver);
-        
+
         await _apiscan.InsertOneAsync(results);
         return results;
     }

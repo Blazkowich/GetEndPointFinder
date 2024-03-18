@@ -1,52 +1,31 @@
-using EndPointFinder.Repository.Interfaces;
+using EndPointFinder.Repository.Helpers.HelperMethodsImplementation;
+using EndPointFinder.Repository.Interfaces.IEndpointFinderInterface;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ScaNet.Controllers
 {
     [ApiController]
-    public class Scanet : ControllerBase
+    public class ScanEndpointController : ControllerBase
     {
-        private readonly IMainMethods _mainMethods;
-        private readonly IEndpointFinder _endpointFinder;
+        private readonly IEndpointFinderGet _endpointFinderGet;
+        private readonly IEndpointFinderPost _endpointFinderPost;
         private readonly IHelperMethods _helperMethods;
 
-        public Scanet(IMainMethods mainMethods, IHelperMethods helperMethods, IEndpointFinder endpointFinder)
+        public ScanEndpointController(IHelperMethods helperMethods, IEndpointFinderGet endpointFinderGet, IEndpointFinderPost endpointFinderPost)
         {
-            _mainMethods = mainMethods;
             _helperMethods = helperMethods;
-            _endpointFinder = endpointFinder;
-        }
-
-        [HttpGet("getApis")]
-        public async Task<IActionResult> GetAllApis()
-        {
-            var result = await _mainMethods.GetAllApis();
-            return Ok(result);
+            _endpointFinderGet = endpointFinderGet;
+            _endpointFinderPost = endpointFinderPost;
         }
 
         [HttpGet("getEndpoints")]
         public async Task<IActionResult> GetAllEndpoints()
         {
-            var result = await _mainMethods.GetAllEndpoints();
+            var result = await _endpointFinderGet.GetAllEndpoints();
             return Ok(result);
         }
 
-        [HttpPost("scanet/scanApis/{url}")]
-        public async Task<IActionResult> ScanForApi(string url)
-        {
-            var validUrl = await _helperMethods.GetValidUrl(url);
-            
-            if (validUrl.Url is null)
-            {
-                return BadRequest(validUrl.Message);
-            
-            }
-
-            var result = await _mainMethods.ScanWebSiteForApis(validUrl.Url);
-            return Ok(result);
-        }
-
-        [HttpPost("scanet/scanAllEndpoints/{url}")]
+        [HttpPost("scanet/scanEndpointsAll/{url}")]
         public async Task<IActionResult> ScanAllTypeEndpoints(string url)
         {
             var validUrl = await _helperMethods.GetValidUrl(url);
@@ -56,11 +35,11 @@ namespace ScaNet.Controllers
                 return BadRequest(validUrl.Message);
             }
 
-            var result = await _mainMethods.ScanWebSiteForEnpoints(validUrl.Url);
+            var result = await _endpointFinderPost.MergedEndpointScanner(validUrl.Url);
             return Ok(result);
         }
 
-        [HttpPost("scanet/scanCleanEndpoints/{url}")]
+        [HttpPost("scanet/scanEndpointsClean/{url}")]
         public async Task<IActionResult> ScanOnlyCleanEndpoints(string url)
         {
             var validUrl = await _helperMethods.GetValidUrl(url);
@@ -70,11 +49,11 @@ namespace ScaNet.Controllers
                 return BadRequest(validUrl.Message);
             }
 
-            var result = await _endpointFinder.GetEndpointsWithoutApi(validUrl.Url);
+            var result = await _endpointFinderPost.ScanEndpointsWithoutApi(validUrl.Url);
             return Ok(result);
         }
 
-        [HttpPost("scanet/scanApiEndpoints/{url}")]
+        [HttpPost("scanet/scanEndpointsOnlyApi/{url}")]
         public async Task<IActionResult> ScanOnlyApiEndpoints(string url)
         {
             var validUrl = await _helperMethods.GetValidUrl(url);
@@ -84,11 +63,11 @@ namespace ScaNet.Controllers
                 return BadRequest(validUrl.Message);
             }
 
-            var result = await _endpointFinder.GetEndpointsWithApi(validUrl.Url);
+            var result = await _endpointFinderPost.ScanEndpointsWithApi(validUrl.Url);
             return Ok(result);
         }
 
-        [HttpPost("scanet/scanSEndpoints/{url}")]
+        [HttpPost("scanet/scanEndpointsOnlyS/{url}")]
         public async Task<IActionResult> ScanOnlySEndpoints(string url)
         {
             var validUrl = await _helperMethods.GetValidUrl(url);
@@ -98,11 +77,11 @@ namespace ScaNet.Controllers
                 return BadRequest(validUrl.Message);
             }
 
-            var result = await _endpointFinder.GetEndpointsWithS(validUrl.Url);
+            var result = await _endpointFinderPost.ScanEndpointsWithS(validUrl.Url);
             return Ok(result);
         }
 
-        [HttpPost("scanet/scanApiAndSEndpoints/{url}")]
+        [HttpPost("scanet/scanEndpointsOnlyApiAndS/{url}")]
         public async Task<IActionResult> ScanOnlyApiAndSEndpoints(string url)
         {
             var validUrl = await _helperMethods.GetValidUrl(url);
@@ -112,7 +91,7 @@ namespace ScaNet.Controllers
                 return BadRequest(validUrl.Message);
             }
 
-            var result = await _endpointFinder.GetEndpointsWithApiAndS(validUrl.Url);
+            var result = await _endpointFinderPost.ScanEndpointsWithApiAndS(validUrl.Url);
             return Ok(result);
         }
     }

@@ -1,18 +1,17 @@
-﻿using EndPointFinder.Data.Context.Settings;
-using EndPointFinder.Models.EndpointScanerModels;
-using EndPointFinder.Repository.Interfaces;
+﻿using EndPointFinder.Models.EndpointScanerModels;
+using EndPointFinder.Repository.Helpers.HelperMethodsImplementation;
+using EndPointFinder.Repository.Interfaces.IEndpointFinderInterface;
 using MongoDB.Driver;
 using System.Net;
-using Microsoft.Extensions.Options;
 
-namespace EndPointFinder.Repository.Implementation;
+namespace EndPointFinder.Repository.Implementation.EndpointFinderImpl;
 
-public class EndpointFinder : IEndpointFinder
+public class EndpointFinderPost : IEndpointFinderPost
 {
     private readonly IMongoCollection<EndpointScanerRootModels> _endpointscan;
     private readonly IHelperMethods _helperMethods;
 
-    public EndpointFinder(IMongoCollection<EndpointScanerRootModels> endpointscan, IHelperMethods helperMethods)
+    public EndpointFinderPost(IMongoCollection<EndpointScanerRootModels> endpointscan, IHelperMethods helperMethods)
     {
         _endpointscan = endpointscan;
         _helperMethods = helperMethods;
@@ -31,10 +30,10 @@ public class EndpointFinder : IEndpointFinder
                 Messages = new List<string>(),
             };
 
-            Task<EndpointScanerRootModels> task1 = GetEndpointsWithoutApi(url);
-            Task<EndpointScanerRootModels> task2 = GetEndpointsWithApi(url);
-            Task<EndpointScanerRootModels> task3 = GetEndpointsWithS(url);
-            Task<EndpointScanerRootModels> task4 = GetEndpointsWithApiAndS(url);
+            Task<EndpointScanerRootModels> task1 = ScanEndpointsWithoutApi(url);
+            Task<EndpointScanerRootModels> task2 = ScanEndpointsWithApi(url);
+            Task<EndpointScanerRootModels> task3 = ScanEndpointsWithS(url);
+            Task<EndpointScanerRootModels> task4 = ScanEndpointsWithApiAndS(url);
 
             await Task.WhenAll(task1, task2, task3, task4);
 
@@ -58,7 +57,7 @@ public class EndpointFinder : IEndpointFinder
         }
     }
 
-    public async Task<EndpointScanerRootModels> GetEndpointsWithApiAndS(string url)
+    public async Task<EndpointScanerRootModels> ScanEndpointsWithApiAndS(string url)
     {
         var configData = await _helperMethods.LoadConfig();
         var endpoints = await _helperMethods.WordTrimmerFromJson(configData.TextPath);
@@ -131,7 +130,7 @@ public class EndpointFinder : IEndpointFinder
         }
     }
 
-    public async Task<EndpointScanerRootModels> GetEndpointsWithApi(string url)
+    public async Task<EndpointScanerRootModels> ScanEndpointsWithApi(string url)
     {
         try
         {
@@ -204,7 +203,7 @@ public class EndpointFinder : IEndpointFinder
         }
     }
 
-    public async Task<EndpointScanerRootModels> GetEndpointsWithoutApi(string url)
+    public async Task<EndpointScanerRootModels> ScanEndpointsWithoutApi(string url)
     {
         try
         {
@@ -264,7 +263,7 @@ public class EndpointFinder : IEndpointFinder
 
                 await Task.WhenAll(tasks);
             }
-            
+
             await _endpointscan.InsertOneAsync(results);
 
             results.Messages.Add($"Found Clean Url: {successfulEndpoints.Count}");
@@ -277,7 +276,7 @@ public class EndpointFinder : IEndpointFinder
         }
     }
 
-    public async Task<EndpointScanerRootModels> GetEndpointsWithS(string url)
+    public async Task<EndpointScanerRootModels> ScanEndpointsWithS(string url)
     {
         try
         {
@@ -348,10 +347,5 @@ public class EndpointFinder : IEndpointFinder
         {
             return new EndpointScanerRootModels { Messages = new List<string> { $"An error occurred: {ex.Message}" } };
         }
-    }
-
-    public async Task<IEnumerable<EndpointScanerRootModels>> GetAllEndpoints()
-    {
-        return await _endpointscan.Find(e => true).ToListAsync();
     }
 }

@@ -1,10 +1,9 @@
-﻿using EndPointFinder.Models.UrlModel;
-using EndPointFinder.Repository.Configuration;
-using EndPointFinder.Repository.Interfaces;
+﻿using EndPointFinder.Data.Config;
+using EndPointFinder.Models.UrlModel;
 using Newtonsoft.Json;
 using System.Text.RegularExpressions;
 
-namespace EndPointFinder.Repository.Implementation;
+namespace EndPointFinder.Repository.Helpers.HelperMethodsImplementation;
 
 public class HelperMethods : IHelperMethods
 {
@@ -128,7 +127,7 @@ public class HelperMethods : IHelperMethods
     {
         string baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
 
-        string jsonFilePath = Path.Combine(baseDirectory, "..", "..", "..", "..", "EndpointFinder", "Repository", "Config", "Config.json");
+        string jsonFilePath = Path.Combine(baseDirectory, "..", "..", "..", "..", "EndpointFinder", "Data", "Config", "Config.json");
 
         jsonFilePath = Path.GetFullPath(jsonFilePath);
 
@@ -137,6 +136,7 @@ public class HelperMethods : IHelperMethods
         return System.Text.Json.JsonSerializer.Deserialize<Config>(json);
     }
 
+    // Unused
     public void WriteToFile(string content)
     {
         lock (fileLock)
@@ -165,6 +165,7 @@ public class HelperMethods : IHelperMethods
         }
     }
 
+    // Unused
     public void WriteEndpointsToFile(string content)
     {
         lock (fileLock)
@@ -193,6 +194,7 @@ public class HelperMethods : IHelperMethods
         }
     }
 
+    // Unused
     public void WriteApiKeyToFile(string content)
     {
         lock (fileLock)

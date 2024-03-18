@@ -2,8 +2,12 @@
 using EndPointFinder.Data.Context.Settings;
 using EndPointFinder.Models.ApiScanerModels;
 using EndPointFinder.Models.EndpointScanerModels;
-using EndPointFinder.Repository.Implementation;
-using EndPointFinder.Repository.Interfaces;
+using EndPointFinder.Repository.Helpers.HelperMethodsImplementation;
+using EndPointFinder.Repository.Implementation.ApiFinder;
+using EndPointFinder.Repository.Implementation.ApiFinderImpl;
+using EndPointFinder.Repository.Implementation.EndpointFinderImpl;
+using EndPointFinder.Repository.Interfaces.IApiFinderInterface;
+using EndPointFinder.Repository.Interfaces.IEndpointFinderInterface;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 
@@ -53,10 +57,13 @@ namespace ScaNet
             });
 
 
-            builder.Services.AddScoped<IApiFinder, ApiFinder>();
-            builder.Services.AddScoped<IEndpointFinder, EndpointFinder>();
+            builder.Services.AddScoped<IApiFinderGet, ApiFinderGet>();
+            builder.Services.AddScoped<IApiFinderPost, ApiFinderPost>();
+
+            builder.Services.AddScoped<IEndpointFinderGet, EndpointFinderGet>();
+            builder.Services.AddScoped<IEndpointFinderPost, EndpointFinderPost>();
+
             builder.Services.AddScoped<IHelperMethods,  HelperMethods>();
-            builder.Services.AddScoped<IMainMethods, MainMethods>();
 
             var app = builder.Build();
 

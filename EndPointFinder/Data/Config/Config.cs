@@ -1,4 +1,4 @@
-﻿namespace EndPointFinder.Repository.Configuration;
+﻿namespace EndPointFinder.Data.Config;
 
 public class Config
 {
