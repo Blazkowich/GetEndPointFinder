@@ -9,7 +9,7 @@ ScaNet is a web application designed for scanning APIs and endpoints within a gi
 - [Usage](#usage)
 - [API](#api)
 - [Contributing](#contributing)
-- [License](#license)
+- [Author](#author)
 
 ## Overview
 
