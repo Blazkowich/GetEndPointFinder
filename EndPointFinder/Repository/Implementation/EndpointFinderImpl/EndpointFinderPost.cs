@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using ConcurrentCollections;
+using EndPointFinder.Data.Config;
 using EndPointFinder.Data.Dataset;
 using EndPointFinder.Models.EndpointScanerModels;
 using EndPointFinder.Repository.Helpers.ExecutionMethods;
@@ -28,9 +29,6 @@ public class EndpointFinderPost : IEndpointFinderPost
     {
         try
         {
-            var configData = await _helperMethods.LoadConfig();
-            var endpoints = await _helperMethods.WordTrimmerFromJson(configData.TextPath);
-
             var results = new EndpointScanerRootModels
             {
                 Endpoints = new HashSet<EndpointModels>(),
@@ -298,21 +296,18 @@ public class EndpointFinderPost : IEndpointFinderPost
                     var response = await httpClient.GetAsync(link);
                     if (response.StatusCode == HttpStatusCode.OK || response.StatusCode == HttpStatusCode.Accepted)
                     {
-                        lock (uniqueResultsLock)
+                        if (!successfulEndpoints.Contains(link))
                         {
-                            if (!successfulEndpoints.Contains(link))
+                            var endpointModel = new EndpointModels
                             {
-                                var endpointModel = new EndpointModels
-                                {
-                                    Type = "Clean",
-                                    Endpoint = link,
-                                    Message = "Found",
-                                    Amount = successfulEndpoints.Count + 1,
-                                };
+                                Type = "Clean",
+                                Endpoint = link,
+                                Message = "Found",
+                                Amount = successfulEndpoints.Count + 1,
+                            };
 
-                                results.Endpoints.Add(endpointModel);
-                                successfulEndpoints.Add(link);
-                            }
+                            results.Endpoints.Add(endpointModel);
+                            successfulEndpoints.Add(link);
                         }
                     }
 

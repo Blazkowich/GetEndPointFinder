@@ -26,7 +26,7 @@ public class ScanApiController : ControllerBase
     [HttpPost("scanet/scanApis/{url}")]
     public async Task<IActionResult> ScanForApi(string url, bool imf) // imf - Ignore Media Files
     {
-        var validUrl = await _helperMethods.GetValidUrl(url);
+        var validUrl = _helperMethods.GetValidUrl(url);
 
         if (validUrl.Url is null)
         {

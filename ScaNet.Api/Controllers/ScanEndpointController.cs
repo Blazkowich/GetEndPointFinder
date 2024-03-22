@@ -38,7 +38,7 @@ namespace ScaNet.Controllers
         [HttpPost("scanet/scanEndpointsAll/{url}")]
         public async Task<IActionResult> ScanAllTypeEndpoints(string url)
         {
-            var validUrl = await _helperMethods.GetValidUrl(url);
+            var validUrl = _helperMethods.GetValidUrl(url);
             
             if (validUrl.Url is null)
             {
@@ -52,7 +52,7 @@ namespace ScaNet.Controllers
         [HttpPost("scanet/scanEndpointsClean/{url}")]
         public async Task<IActionResult> ScanOnlyCleanEndpoints(string url)
         {
-            var validUrl = await _helperMethods.GetValidUrl(url);
+            var validUrl = _helperMethods.GetValidUrl(url);
 
             if (validUrl.Url is null)
             {
@@ -67,7 +67,7 @@ namespace ScaNet.Controllers
         [HttpPost("scanet/scanEndpointsOnlyApi/{url}")]
         public async Task<IActionResult> ScanOnlyApiEndpoints(string url)
         {
-            var validUrl = await _helperMethods.GetValidUrl(url);
+            var validUrl = _helperMethods.GetValidUrl(url);
 
             if (validUrl.Url is null)
             {
@@ -81,7 +81,7 @@ namespace ScaNet.Controllers
         [HttpPost("scanet/scanEndpointsOnlyS/{url}")]
         public async Task<IActionResult> ScanOnlySEndpoints(string url)
         {
-            var validUrl = await _helperMethods.GetValidUrl(url);
+            var validUrl = _helperMethods.GetValidUrl(url);
 
             if (validUrl.Url is null)
             {
@@ -95,7 +95,7 @@ namespace ScaNet.Controllers
         [HttpPost("scanet/scanEndpointsOnlyApiAndS/{url}")]
         public async Task<IActionResult> ScanOnlyApiAndSEndpoints(string url)
         {
-            var validUrl = await _helperMethods.GetValidUrl(url);
+            var validUrl = _helperMethods.GetValidUrl(url);
 
             if (validUrl.Url is null)
             {

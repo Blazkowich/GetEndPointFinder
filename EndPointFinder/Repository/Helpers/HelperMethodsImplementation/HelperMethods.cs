@@ -1,4 +1,5 @@
 ﻿using EndPointFinder.Data.Config;
+using EndPointFinder.Data.Dataset;
 using EndPointFinder.Models.UrlModel;
 using Newtonsoft.Json;
 using System.Text.RegularExpressions;
@@ -14,6 +15,7 @@ public class HelperMethods : IHelperMethods
         LoadConfig().Wait();
     }
 
+    // Unused
     public async Task<List<string>> WordTrimmerFromTxt(string textPath)
     {
         try
@@ -46,6 +48,7 @@ public class HelperMethods : IHelperMethods
         }
     }
 
+    // Unused
     public async Task<List<string>> WordTrimmerFromJson(string dictionaryPath)
     {
         try
@@ -87,6 +90,7 @@ public class HelperMethods : IHelperMethods
         }
     }
 
+    // Unused
     public int CountWordsInFile(string filePath)
     {
         string[] lines = File.ReadAllLines(filePath);
@@ -102,6 +106,7 @@ public class HelperMethods : IHelperMethods
         return wordCount;
     }
 
+    // Unused
     public Task<int> PerfectDividerNumberFinder(int numberForDivide)
     {
         List<int> listOfPerfectDividers = new List<int>();
@@ -221,9 +226,9 @@ public class HelperMethods : IHelperMethods
         }
     }
 
-    public async Task<UrlModel> GetValidUrl(string inputUrl)
+    public UrlModel GetValidUrl(string inputUrl)
     {
-        if (!await IsValidUrl(inputUrl))
+        if (!IsValidUrl(inputUrl))
         {
             return new UrlModel
             {
@@ -241,10 +246,9 @@ public class HelperMethods : IHelperMethods
         };
     }
 
-    public async Task<bool> IsValidUrl(string url)
+    public bool IsValidUrl(string url)
     {
-        var configData = await LoadConfig();
-        var domains = await WordTrimmerFromTxt(configData.DomainPath);
+        var domains = DomainHashMap.DomainMap.Keys;
 
         string pattern = @"^(http(s)?://)?([\w-]+\.)+[\w-]+(/[\w- ;,./?%&=]*)?$";
         return Regex.IsMatch(url, pattern) && domains.Any(url.EndsWith);

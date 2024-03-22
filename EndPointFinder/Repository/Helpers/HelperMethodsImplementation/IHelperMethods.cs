@@ -23,7 +23,7 @@ public interface IHelperMethods
 
     void WriteApiKeyToFile(string content);
 
-    Task<UrlModel> GetValidUrl(string inputUrl);
+    UrlModel GetValidUrl(string inputUrl);
 
-    Task<bool> IsValidUrl(string url);
+    bool IsValidUrl(string url);
 }
