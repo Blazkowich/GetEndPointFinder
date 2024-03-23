@@ -1,6 +1,10 @@
-# ScaNet
+<p align="center">
+  <img src="Images/ScanApi.svg" alt="ScanApi Logo", width="650">
+</p>
 
-ScaNet is a web application designed for scanning APIs and endpoints within a given URL. It provides functionalities to scan APIs, endpoints, and various combinations of them, filtering out certain types of endpoints based on user preferences.
+# ScanApi
+
+ScanApi is a web application designed for scanning APIs and endpoints within a given URL. It provides functionalities to scan APIs, endpoints, and various combinations of them, filtering out certain types of endpoints based on user preferences.
 
 ## Table of Contents
 
@@ -13,7 +17,7 @@ ScaNet is a web application designed for scanning APIs and endpoints within a gi
 
 ## Overview
 
-ScaNet consists of two main components:
+ScanApi consists of two main components:
 - **API Scanner**: Scans for APIs within a given URL.
 - **Endpoint Scanner**: Scans for endpoints within a given URL.
 
@@ -21,9 +25,9 @@ The application is built using ASP.NET Core and MongoDB for data storage. It emp
 
 ## Setup
 
-To set up the ScaNet application, follow these steps:
+To set up the ScanApi application, follow these steps:
 
-1. **Clone the Repository**: Clone the ScaNet repository to your local machine.
+1. **Clone the Repository**: Clone the ScanApi repository to your local machine.
 2. **Install Dependencies**: Run `dotnet restore` to install the necessary dependencies.
 3. **Configure MongoDB**: Update the MongoDB connection string and database settings in the `appsettings.json` file.
 4. **Configure Config.Json**: Update the Direction of 'TextPath' and 'DomainPath' if you want to work with .txt files.
@@ -34,17 +38,17 @@ To set up the ScaNet application, follow these steps:
 Once the application is running, you can interact with it through its API endpoints. The main functionalities include:
 
 - **API Scanner Endpoints**:
-  - `POST /scanet/scanApis/{url}`: Scan for APIs within the specified URL.
+  - `POST /scanapi/scanApis/{url}`: Scan for APIs within the specified URL.
   - `GET /getApis`: Get all scanned APIs.
   - `GET /getApis/{id}`: Get APIs by ID.
 
 - **Endpoint Scanner Endpoints**:
   - `GET /getEndpoints`: Get all scanned endpoints.
-  - `POST /scanet/scanEndpointsAll/{url}`: Scan all types of endpoints within the specified URL.
-  - `POST /scanet/scanEndpointsClean/{url}`: Scan only clean endpoints within the specified URL.
-  - `POST /scanet/scanEndpointsOnlyApi/{url}`: Scan only API endpoints within the specified URL.
-  - `POST /scanet/scanEndpointsOnlyS/{url}`: Scan only endpoints with 's' within the specified URL.
-  - `POST /scanet/scanEndpointsOnlyApiAndS/{url}`: Scan only API and 's' endpoints within the specified URL.
+  - `POST /scanapi/scanEndpointsAll/{url}`: Scan all types of endpoints within the specified URL.
+  - `POST /scanapi/scanEndpointsClean/{url}`: Scan only clean endpoints within the specified URL.
+  - `POST /scanapi/scanEndpointsOnlyApi/{url}`: Scan only API endpoints within the specified URL.
+  - `POST /scanapi/scanEndpointsOnlyS/{url}`: Scan only endpoints with 's' within the specified URL.
+  - `POST /scanapi/scanEndpointsOnlyApiAndS/{url}`: Scan only API and 's' endpoints within the specified URL.
 
 ---
 
@@ -149,7 +153,7 @@ The API documentation can be accessed using Swagger UI. When running the applica
 
 ## Contributing
 
-Contributions to the ScaNet project are welcome! If you'd like to contribute, please follow these steps:
+Contributions to the ScanApi project are welcome! If you'd like to contribute, please follow these steps:
 
 1. Fork the repository.
 2. Create your feature branch (`git checkout -b feature/your-feature`).

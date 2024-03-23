@@ -35,7 +35,7 @@ namespace ScaNet.Controllers
             return result.ToActionResult<IEnumerable<EndpointScanerRootModels> , IEnumerable<EndpointScanerModels>>(_mapper);
         }
 
-        [HttpPost("scanet/scanEndpointsAll/{url}")]
+        [HttpPost("scanapi/scanEndpointsAll/{url}")]
         public async Task<IActionResult> ScanAllTypeEndpoints(string url)
         {
             var validUrl = _helperMethods.GetValidUrl(url);
@@ -49,7 +49,7 @@ namespace ScaNet.Controllers
             return result.ToActionResult<EndpointScanerRootModels, EndpointScanerModels>(_mapper);
         }
 
-        [HttpPost("scanet/scanEndpointsClean/{url}")]
+        [HttpPost("scanapi/scanEndpointsClean/{url}")]
         public async Task<IActionResult> ScanOnlyCleanEndpoints(string url)
         {
             var validUrl = _helperMethods.GetValidUrl(url);
@@ -64,7 +64,7 @@ namespace ScaNet.Controllers
             return result.ToActionResult<EndpointScanerRootModels, EndpointScanerModels>(_mapper);
         }
 
-        [HttpPost("scanet/scanEndpointsOnlyApi/{url}")]
+        [HttpPost("scanapi/scanEndpointsOnlyApi/{url}")]
         public async Task<IActionResult> ScanOnlyApiEndpoints(string url)
         {
             var validUrl = _helperMethods.GetValidUrl(url);
@@ -78,7 +78,7 @@ namespace ScaNet.Controllers
             return result.ToActionResult<EndpointScanerRootModels, EndpointScanerModels>(_mapper);
         }
 
-        [HttpPost("scanet/scanEndpointsOnlyS/{url}")]
+        [HttpPost("scanapi/scanEndpointsOnlyS/{url}")]
         public async Task<IActionResult> ScanOnlySEndpoints(string url)
         {
             var validUrl = _helperMethods.GetValidUrl(url);
@@ -92,7 +92,7 @@ namespace ScaNet.Controllers
             return result.ToActionResult<EndpointScanerRootModels, EndpointScanerModels>(_mapper);
         }
 
-        [HttpPost("scanet/scanEndpointsOnlyApiAndS/{url}")]
+        [HttpPost("scanapi/scanEndpointsOnlyApiAndS/{url}")]
         public async Task<IActionResult> ScanOnlyApiAndSEndpoints(string url)
         {
             var validUrl = _helperMethods.GetValidUrl(url);

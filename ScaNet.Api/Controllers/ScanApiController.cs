@@ -23,7 +23,7 @@ public class ScanApiController : ControllerBase
         _mapper = mapper;
     }
 
-    [HttpPost("scanet/scanApis/{url}")]
+    [HttpPost("scanapi/scanApis/{url}")]
     public async Task<IActionResult> ScanForApi(string url, bool imf) // imf - Ignore Media Files
     {
         var validUrl = _helperMethods.GetValidUrl(url);
